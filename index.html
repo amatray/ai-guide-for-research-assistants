@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Philosophy - Claude Code for RAs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
+</head>
+<body>
+  <details class="mobile-nav">
+    <summary>Claude Code for RAs - Menu</summary>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-active">Philosophy</a></li>
+      <li><a href="getting-started.html">Getting Started</a></li>
+      <li><a href="core-workflow.html">Core Workflow</a></li>
+      <li><a href="making-it-yours.html">Making It Yours</a></li>
+      <li><a href="common-failures.html">Common Failures</a></li>
+      <li><a href="async-workflows.html">Async Workflows</a></li>
+      <li><a href="large-datasets.html">Large Datasets</a></li>
+    </ul>
+  </details>
+
+  <div class="page-wrapper">
+    <nav class="site-nav">
+      <div class="nav-brand">
+        <span class="nav-title">Claude Code for RAs</span>
+        <span class="nav-subtitle">A Guide by Adrien Matray</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html" class="nav-active">Philosophy</a></li>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="core-workflow.html">Core Workflow</a></li>
+        <li><a href="making-it-yours.html">Making It Yours</a></li>
+        <li><a href="common-failures.html">Common Failures</a></li>
+        <li><a href="async-workflows.html">Async Workflows</a></li>
+        <li><a href="large-datasets.html">Large Datasets</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Working with AI: A Philosophy</h1>
+
+      <p>This guide exists because AI tools will be central to your daily research work. Used well, they multiply your output. Used carelessly, they multiply your mistakes. The difference is not talent or experience with technology; it is mindset.</p>
+
+      <p>What follows are the principles that make AI collaboration productive. Read them before you touch the tool. Return to them when something goes wrong.</p>
+
+      <h2>The Mental Model</h2>
+
+      <p>Think of AI as an over-eager, overconfident, and quietly lazy collaborator. It works fast, never hesitates, and always wants to help. It will produce output instantly and present it with complete confidence, whether it is correct or not.</p>
+
+      <p>The laziness is the subtle part. AI is simultaneously eager to respond and inclined to take shortcuts. It will suggest the quick fix over the structurally sound solution. When there is ambiguity, it interprets things in the way that requires the least effort. It will claim data is "redundant" or "reconstructable" to justify skipping harder work, without having actually verified the claim. And it will default to what it "remembers" from training rather than using its tools to check the current state of your data or code.</p>
+
+      <p>This means you need to watch for two failure modes: not just "is this wrong?" but also "is this cutting corners?"</p>
+
+      <p>This is not a search engine that retrieves facts. It generates plausible text. Your job is to know the difference.</p>
+
+      <p>The practical consequence: every time AI produces output, your first question should be <em>"where IS this wrong, and how do I check?"</em> Not whether it sounds right (AI is extremely good at sounding right; this is precisely what makes it dangerous). Not whether it looks professional. Whether you can verify it independently.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Key principle</span>
+        <p>AI does not know when it is wrong. It never hesitates, never flags uncertainty. Your skepticism is the only quality filter in this system.</p>
+      </aside>
+
+      <h2>Just Ask (and Show)</h2>
+
+      <p>AI is excellent at figuring out what you want. If you are stuck, just ask. If you are struggling with something on your screen, take a screenshot and share it. Claude Code reads images natively.</p>
+
+      <p>You do not need to craft a perfect prompt. You do not need special syntax or magic words. Communicate what you need the way you would tell a colleague: "I have this CSV and I don't know what to do with it," or "here's the error I'm getting" with a screenshot pasted in.</p>
+
+      <p>This is the lowest-friction, highest-value habit you can develop. Most people waste time trying to formulate the "right" question. Just ask. Better yet, just <em>say</em> it: voice dictation tools like <a href="https://www.wispr.flow">Wispr Flow</a> let you talk to Claude Code instead of typing. It is faster, more natural, and removes the last bit of friction between having a thought and acting on it.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Remember</span>
+        <p>Asking freely is about <em>input</em>. Verification is about <em>output</em>. Lower the barrier to asking; raise the bar for accepting.</p>
+      </aside>
+
+      <h2>The Personalization Thesis</h2>
+
+      <p>Generic AI tips are mostly useless. The real power comes from making AI adapt to how <em>you</em> specifically think and work.</p>
+
+      <p>This means: your file conventions, your preferred tools, your verification habits, your project structure. The mechanism for this is a file called <code>CLAUDE.md</code> that lives in your project and tells the AI how to behave in your context. You will learn to write one.</p>
+
+      <p>Every researcher who gets real value from AI has built this kind of personalized system. The ones who find AI "okay but not great" are using it generically. The difference is not the model; it is the configuration.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Where to start</span>
+        <p>Think of the mental heuristics you already use: the rules, patterns, and checklists your brain runs through every time you repeat a task. You already do this work internally; you just do it silently. Writing those routines down so AI can follow them is exactly what personalization means.</p>
+      </aside>
+
+      <h2>The Verification Mindset</h2>
+
+      <p>If you cannot verify it, do not trust it. Every output needs a verification path <em>before</em> you accept it.</p>
+
+      <p>Here is what that looks like in practice:</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Silent merge failure</span>
+        <p>You ask AI to merge two datasets and run a regression. It gives you a coefficient that looks reasonable. But half the observations were silently dropped in the merge, and it used county fixed effects instead of firm fixed effects. It did not flag any of this.</p>
+      </aside>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Sample shrinkage</span>
+        <p>You ask AI to clean a panel dataset. It returns a balanced panel with no missing values. It achieved this by dropping every firm-year with an incomplete row, cutting your sample by 40%. It never mentioned the trade-off.</p>
+      </aside>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Wrong specification</span>
+        <p>You ask AI to replicate a specification from a paper. It produces a table with similar magnitudes. But it clustered at the wrong level, omitted an interaction term, and used a different sample restriction. The output looks correct at a glance.</p>
+      </aside>
+
+      <p>This is not paranoia. It is the only way to maintain research integrity when working with a tool that confidently produces wrong output.</p>
+
+      <h2>The Independence Principle</h2>
+
+      <p>You cannot ask the same conversation to both produce and verify. The producer is biased toward confirming its own output.</p>
+
+      <p>When verification matters (and it usually does), start a new conversation. Ask it to review the output cold, without the context of how it was generated. This is the same principle as having a coauthor check your work: fresh eyes catch what familiar eyes miss.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Advanced</span>
+        <p>You can set up "adversarial" review agents that deliberately try to break what the first agent built. We will cover this later.</p>
+      </aside>
+
+      <h2>Context Hygiene</h2>
+
+      <p>Conversations degrade over time. The longer a conversation goes, the more likely the AI is to forget earlier instructions, contradict itself, or produce lower-quality output.</p>
+
+      <p>The fix is simple: clear the conversation regularly. One focused task per conversation. When you finish a task, start fresh. When quality drops, start fresh. Do not try to squeeze an entire project into one session.</p>
+
+      <p>Signs it is time to clear: the AI repeats itself, forgets something you told it earlier, or contradicts its own previous output. See <a href="getting-started.html">Getting Started</a> for the practical mechanics.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">The handoff trick</span>
+        <p>Clearing does not mean losing your work. Before ending a conversation, just ask: "Write a short markdown summary of where we are, what was done, and what is left." Paste that summary into your next conversation and you pick up exactly where you left off, but with a fresh context window.</p>
+      </aside>
+
+      <h2>The Automation Principle</h2>
+
+      <p>If you correct the AI on the same thing three times, write it down as a permanent rule. If you give the same instruction at the start of every conversation, find a way to make it automatic. If a workflow has more than three steps you always do together, turn it into a single command.</p>
+
+      <p>The principle is simple: your corrections and habits should compound. Every mistake you catch should become a rule the AI follows forever, not something you catch again next week.</p>
+
+      <p>Claude Code has built-in ways to do exactly this. You can write down your preferences once, and they will be followed in every conversation, automatically. For example, one of my rules is: "Tables in PDFs must never break across pages." Another: "Always use full country names in figures and tables, never ISO3 codes." I wrote these down once. I have not had to repeat them since. You will learn how to set this up in a later section.</p>
+
+      <h2>What This Guide Will NOT Teach You</h2>
+
+      <p>This is not a guide about prompt engineering tricks, jailbreaking, or getting AI to write your dissertation for you. It will not teach you how to avoid thinking.</p>
+
+      <p>It will teach you how to think <em>with</em> AI: how to supervise it effectively, how to catch its mistakes, how to make it adapt to your workflow, and how to build systems that compound your productivity over months, not just minutes.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">The goal</span>
+        <p>A reliable collaborative workflow where you remain the expert and the AI remains the tool.</p>
+      </aside>
+
+      <p>Now that you have the mindset, set up the tool.</p>
+
+      <nav class="page-nav">
+        <a href="getting-started.html" class="next">Next: Getting Started &#8594;</a>
+      </nav>
+
+      <footer class="page-footer">
+        Last verified: May 2026
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

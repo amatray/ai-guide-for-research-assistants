@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Workflow - Claude Code for RAs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
+</head>
+<body>
+  <details class="mobile-nav">
+    <summary>Claude Code for RAs - Menu</summary>
+    <ul class="nav-links">
+      <li><a href="index.html">Philosophy</a></li>
+      <li><a href="getting-started.html">Getting Started</a></li>
+      <li><a href="core-workflow.html" class="nav-active">Core Workflow</a></li>
+      <li><a href="making-it-yours.html">Making It Yours</a></li>
+      <li><a href="common-failures.html">Common Failures</a></li>
+      <li><a href="async-workflows.html">Async Workflows</a></li>
+      <li><a href="large-datasets.html">Large Datasets</a></li>
+    </ul>
+  </details>
+
+  <div class="page-wrapper">
+    <nav class="site-nav">
+      <div class="nav-brand">
+        <span class="nav-title">Claude Code for RAs</span>
+        <span class="nav-subtitle">A Guide by Adrien Matray</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Philosophy</a></li>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="core-workflow.html" class="nav-active">Core Workflow</a></li>
+        <li><a href="making-it-yours.html">Making It Yours</a></li>
+        <li><a href="common-failures.html">Common Failures</a></li>
+        <li><a href="async-workflows.html">Async Workflows</a></li>
+        <li><a href="large-datasets.html">Large Datasets</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>The Core Workflow</h1>
+
+      <p>This is the most important page in the guide. Everything else supports this loop. If you internalize one thing, make it this: <em>plan, review, execute, verify.</em></p>
+
+      <h2>The Loop</h2>
+
+      <p>Every task follows the same cycle:</p>
+
+      <div class="workflow-diagram">
+        <div class="workflow-step">1. Plan</div>
+        <div class="workflow-arrow">&darr;</div>
+        <div class="workflow-step">2. Review the plan</div>
+        <div class="workflow-arrow">&darr;</div>
+        <div class="workflow-step">3. Execute</div>
+        <div class="workflow-arrow">&darr;</div>
+        <div class="workflow-step">4. Verify the output</div>
+        <div class="workflow-arrow">&darr;</div>
+        <div class="workflow-step workflow-step-repeat">Iterate or move on</div>
+      </div>
+
+      <p>The temptation is to skip to step 3. AI is fast, so you want to let it run. Resist.</p>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Skip planning</span>
+          <p>Ask Claude to execute immediately. Fast start, slow end. Code runs but produces wrong results. You spend 1-2 hours debugging.</p>
+        </div>
+        <div class="good">
+          <span class="label">Plan first</span>
+          <p>Ask Claude to plan. Review. Correct. Execute. 10 minutes upfront, clean execution, debugging is rare.</p>
+        </div>
+      </div>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Key insight</span>
+        <p>If you skip planning, you spend <em>more</em> time fixing mistakes than you saved by rushing. Every time.</p>
+      </aside>
+
+      <h2>Plan Mode: Your Safety Net</h2>
+
+      <p>Plan mode is a built-in Claude Code feature. When activated, Claude will think through the task and describe what it intends to do, without actually doing it. You review the plan, correct it, and only then let it execute.</p>
+
+      <p>In VS Code, press <code>Shift+Tab</code> to cycle through Claude Code's modes. Keep pressing until you land on <em>Plan mode</em>. You can confirm it is active by looking at the bottom of the Claude Code panel, where it displays the current mode. You can also type <code>/plan</code> directly, or simply ask: "Plan this out before doing anything."</p>
+
+      <figure class="screenshot">
+        <img src="img/screenshots/vscode_plan_mode.png" alt="The Claude Code panel in VS Code showing the mode selector. Plan mode is selected, indicated by a checkmark next to 'Plan mode' and the label visible at the bottom of the panel.">
+      </figure>
+
+      <p>Claude will produce a step-by-step plan. Read it carefully. Ask yourself:</p>
+
+      <ul>
+        <li>Does it understand what I actually want?</li>
+        <li>Are the file paths correct?</li>
+        <li>Are the variable names correct?</li>
+        <li>Is it doing anything I did not ask for?</li>
+        <li>What assumptions is it making?</li>
+      </ul>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Before complex tasks, ask what is feasible</span>
+        <p>Before diving into a complex task, try: "Tell me what it would take to do this. Is this feasible? What might be missing?" This surfaces blockers (missing data, wrong identifiers, format incompatibilities) before you invest time. In one example, asking Claude about a classification task immediately revealed that the key variable was not in the dataset at all.</p>
+      </aside>
+
+      <h2>The Review Cycle</h2>
+
+      <p>After Claude produces a plan, review it. If something is wrong, tell Claude what to fix. It will revise the plan. Review again. Repeat until the plan is correct.</p>
+
+      <p>This back-and-forth is not wasted time. It is the core of the workflow. A good plan that survives two rounds of review will execute cleanly. A plan you approved without reading will produce output you cannot trust. Claude Code has a built-in skill for exactly this: type <code>/review-plan</code> and it will systematically stress-test the plan, surface blind spots, and flag missing steps before you commit to execution.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Let Claude ask you questions</span>
+        <p>During plan mode, Claude may ask you design questions: database format, variable definitions, sample restrictions. These are research decisions, and you should make them. Do not be surprised when Claude asks, and do not let it default silently. This is the reverse of the usual dynamic; it surfaces decisions you might not have anticipated.</p>
+      </aside>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Review is not just for plans</span>
+        <p>You can ask Claude to review any document: code, drafts, outlines, data dictionaries. Just type: "Use the skill /review-plan and run it on [your document]." This launches a structured, multi-angle review that catches things you would miss on a quick read.</p>
+      </aside>
+
+      <h2>Worked Example: Cleaning a Dataset</h2>
+
+      <p>Let us walk through the full cycle with a real task. We have a CSV of US monthly unemployment rates from FRED (bundled in <code>data/examples/UNRATE.csv</code>). The task:</p>
+
+      <ul>
+        <li>Load the CSV</li>
+        <li>Drop observations before 2000</li>
+        <li>Compute the annual average unemployment rate</li>
+        <li>Save the result as <code>annual_unrate.csv</code></li>
+      </ul>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Before you execute anything</span>
+        <p>Never let Claude execute on data or code that is not committed or backed up. If it breaks something, you need an undo. Make sure your files are saved and, ideally, committed to git before running any code.</p>
+      </aside>
+
+      <h3>Step 1: Ask Claude to plan</h3>
+
+      <p>Start Claude Code in plan mode and describe the task:</p>
+
+      <div class="code-block">
+        <div class="code-header">Your message</div>
+        <pre><code>/prompt I have a CSV at data/examples/UNRATE.csv with monthly unemployment data from FRED.
+Plan an R script that:
+- Loads the CSV
+- Drops observations before 2000
+- Computes annual average unemployment rate
+- Saves the result as annual_unrate.csv</code></pre>
+      </div>
+
+      <h3>Step 2: Review the plan, catch the error</h3>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Always run /review-plan</span>
+        <p>Before reading the plan yourself, type <code>/review-plan</code>. This skill launches a systematic, multi-angle review that catches problems you would miss on a quick read. Make it a habit: plan first, then <code>/review-plan</code>, then read.</p>
+        <p>After you address the findings (accepting some suggestions, rejecting others, adding your own modifications), run <code>/review-plan</code> again on the revised plan. For complex projects, expect to run it two or three times before the plan is solid. Each pass catches things the previous one missed.</p>
+      </aside>
+
+      <p>Claude will produce a plan. Read it carefully. Here is what will likely go wrong:</p>
+
+      <p>Claude will assume the unemployment rate column is called something like <code>unemployment_rate</code>. But FRED names it <code>UNRATE</code>. This is exactly the kind of silent, plausible mistake from the <a href="index.html">Philosophy</a> page. The plan looks correct; the variable name is wrong.</p>
+
+      <p>Tell Claude:</p>
+
+      <div class="code-block">
+        <div class="code-header">Your correction</div>
+        <pre><code>The variable is called UNRATE, not unemployment_rate. Fix the plan.</code></pre>
+      </div>
+
+      <h3>Step 3: Execute</h3>
+
+      <p>Once the plan is correct, tell Claude to execute. It will write and run the R script.</p>
+
+      <h3>Step 4: Verify</h3>
+
+      <p>Do not just accept the output. Check it:</p>
+
+      <ul>
+        <li>Open <code>annual_unrate.csv</code>. Does it have 24-26 rows (years 2000 through 2024/25)?</li>
+        <li>Do the values make sense? The unemployment rate peaked around 9.5% in 2010 and was around 3.5% in 2019 and 2023.</li>
+        <li>Eyeball a few values against <a href="https://fred.stlouisfed.org/series/UNRATE">FRED's interactive chart</a>.</li>
+        <li>Did Claude silently drop rows with missing values instead of flagging them?</li>
+      </ul>
+
+
+      <h2>Where Could It Be Wrong?</h2>
+
+      <p>After any execution, run through this checklist:</p>
+
+      <ul>
+        <li><strong>File paths</strong>: do the files it references actually exist?</li>
+        <li><strong>Variable names</strong>: do they match the actual data, not what Claude assumed?</li>
+        <li><strong>Sample size</strong>: how many observations went in vs. came out? Did it silently drop data?</li>
+        <li><strong>Scope</strong>: did it do exactly what you asked, or did it add things?</li>
+        <li><strong>Assumptions</strong>: what did it assume that you did not state? Are those assumptions correct?</li>
+      </ul>
+
+      <h2>Iteration: Refining the Plan</h2>
+
+      <p>When something is wrong in the plan or the output, do not start over. Tell Claude exactly what to fix. Good correction prompts are specific:</p>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Vague</span>
+          <p>"This is wrong, try again."</p>
+        </div>
+        <div class="good">
+          <span class="label">Specific</span>
+          <p>"The merge dropped 40% of observations. Use a 1:m merge on firm_id and keep all observations from the master dataset."</p>
+        </div>
+      </div>
+
+      <p>The more specific your correction, the more likely Claude gets it right on the next pass. Vague corrections lead to vague fixes.</p>
+
+      <h2>When to Let It Execute</h2>
+
+      <p>Only approve execution when all three conditions are met:</p>
+
+      <ul>
+        <li><strong>The plan is verified</strong>: you have read every step and it matches your intent.</li>
+        <li><strong>The scope is bounded</strong>: you know exactly what files it will create or modify.</li>
+        <li><strong>The output is reversible</strong>: if it breaks something, you can undo it (via git, backup, or because the original files are untouched).</li>
+      </ul>
+
+      <p>If any of these is missing, go back to the plan.</p>
+
+      <h2>Post-Execution Verification</h2>
+
+      <p>After Claude edits files or produces output, verify what actually changed. The best tool for this is <code>git diff</code>:</p>
+
+      <div class="code-block">
+        <div class="code-header">Terminal</div>
+        <pre><code>git diff</code></pre>
+      </div>
+
+      <p>This shows you every line that was added, removed, or modified. Read it. If you do not understand a change, ask Claude to explain it. If you did not ask for a change and it is there, something went wrong.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Git as your undo button</span>
+        <p>Claude Code can commit, diff, and branch for you. Always review the diff before approving a commit. Never let it force-push. If something goes wrong, you can always revert to the previous commit.</p>
+      </aside>
+
+      <h2>The Independence Principle in Practice</h2>
+
+      <p>From the <a href="index.html">Philosophy</a> page: you cannot ask the same conversation to both produce and verify. Here is what that looks like in practice.</p>
+
+      <p>After Claude produces output, ask it to spawn an independent agent for the review. The agent gets a fresh context with no memory of how the code was written:</p>
+
+      <div class="code-block">
+        <div class="code-header">Your message</div>
+        <pre><code>/prompt Run a fresh, independent agent to review this R script.
+Check for: correct variable names against the data,
+whether the merge preserves all observations, correct fixed effects,
+correct clustering. Flag anything suspicious.</code></pre>
+      </div>
+
+      <p>The agent approaches the code cold, like a coauthor reading your work for the first time. It will catch things the current conversation is biased to defend. You stay in the same session; no need to manually clear or start over.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Why this works</span>
+        <p>A conversation that produced code is biased toward confirming that code works. A fresh conversation approaches it cold, like a coauthor reading your work for the first time. This is not paranoia; it is how peer review works.</p>
+      </aside>
+
+      <p>Next: make Claude adapt to how you specifically work.</p>
+
+      <nav class="page-nav">
+        <a href="getting-started.html" class="prev">&larr; Getting Started</a>
+        <a href="making-it-yours.html" class="next">Making It Yours &rarr;</a>
+      </nav>
+
+      <footer class="page-footer">
+        Last verified: May 2026
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

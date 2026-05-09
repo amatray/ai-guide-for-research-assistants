@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Making It Yours - Claude Code for RAs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
+</head>
+<body>
+  <details class="mobile-nav">
+    <summary>Claude Code for RAs - Menu</summary>
+    <ul class="nav-links">
+      <li><a href="index.html">Philosophy</a></li>
+      <li><a href="getting-started.html">Getting Started</a></li>
+      <li><a href="core-workflow.html">Core Workflow</a></li>
+      <li><a href="making-it-yours.html" class="nav-active">Making It Yours</a></li>
+      <li><a href="common-failures.html">Common Failures</a></li>
+      <li><a href="async-workflows.html">Async Workflows</a></li>
+      <li><a href="large-datasets.html">Large Datasets</a></li>
+    </ul>
+  </details>
+
+  <div class="page-wrapper">
+    <nav class="site-nav">
+      <div class="nav-brand">
+        <span class="nav-title">Claude Code for RAs</span>
+        <span class="nav-subtitle">A Guide by Adrien Matray</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Philosophy</a></li>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="core-workflow.html">Core Workflow</a></li>
+        <li><a href="making-it-yours.html" class="nav-active">Making It Yours</a></li>
+        <li><a href="common-failures.html">Common Failures</a></li>
+        <li><a href="async-workflows.html">Async Workflows</a></li>
+        <li><a href="large-datasets.html">Large Datasets</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Making It Yours</h1>
+
+      <p>This is where AI goes from "useful sometimes" to "indispensable." The difference between researchers who get real value from AI and those who find it "okay" is not the model. It is the configuration.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">On this page</span>
+        <ul>
+          <li><a href="#global-layer">Global setup</a> (applies everywhere)</li>
+          <li><a href="#project-layer">Project setup</a> (for this project)</li>
+          <li><a href="#team-skills">Team skills and automation</a></li>
+        </ul>
+      </aside>
+
+      <h2>The Two-Layer Architecture</h2>
+
+      <p>The most important thing to understand about Claude Code's setup is that everything has two layers:</p>
+
+      <ul>
+        <li><strong>Global</strong> (lives in <code>~/.claude/</code>): applies everywhere, in every project, in every conversation. This is your identity, your universal rules, your reusable tools.</li>
+        <li><strong>Project</strong> (lives in the project folder): applies only when you are working in that specific folder. This is your project-specific context, variable names, file conventions.</li>
+      </ul>
+
+      <p>When you open Claude Code in a project folder, it reads <em>both</em> layers automatically. You get your universal setup plus project-specific rules, without doing anything. This is why personalization compounds: set it up once, benefit forever.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">The mental model</span>
+        <p>Global = "who I am and how I always work." Project = "what this specific project needs." Both load automatically, every time.</p>
+      </aside>
+
+      <h2 id="global-layer">The Global Layer</h2>
+
+      <p>Your global setup lives in <code>~/.claude/</code> and contains three things. This path is fixed: Claude Code looks for it in that exact location on your local machine.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Do not put ~/.claude/ in Dropbox</span>
+        <p>Your instinct will be "I need this synced across machines, so I will put it in Dropbox." Claude Code will not find it anywhere other than <code>~/.claude/</code>. This is the single most common setup mistake. Use GitHub and symlinks instead (see below).</p>
+      </aside>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Syncing across machines</span>
+        <p>If you work on multiple computers and want the same skills and profile everywhere, use GitHub. Push your <code>~/.claude/commands/</code> folder and <code>CLAUDE.md</code> to a repository, clone it on each machine, and create symlinks back to <code>~/.claude/</code>. For example: <code>ln -s ~/my-claude-config/commands ~/.claude/commands</code>. This gives you version-controlled sync without breaking the path Claude Code expects. Adrien can help you set this up.</p>
+      </aside>
+
+      <h3>1. CLAUDE.md: your profile and rules</h3>
+
+      <p>A <code>CLAUDE.md</code> file is a markdown file that Claude Code reads at the start of every conversation. It contains your rules, preferences, and context. Think of it as a permanent briefing document.</p>
+
+      <div class="code-block">
+        <div class="code-header">~/.claude/CLAUDE.md (starter)</div>
+        <pre><code># Context
+I am a research assistant working on applied economics projects.
+Research focus: [your professor's area, e.g., trade, labor, macro-finance].
+Primary tools: Stata, R, LaTeX, Python.
+My files are on Dropbox at ~/Dropbox/research/.
+
+# How I Prefer to Work
+- Be concise. No over-explanation, no unnecessary back-and-forth.
+- Ask before modifying or deleting files.
+- Don't add features or refactor beyond what was asked.
+- When creating or modifying skills, always use /skill-creator.
+- When reading a long PDF, always use /pdf-chunker.
+- When I ask for variations or tweaks, only rerun the part that changed.
+  Don't rerun an entire pipeline to change a graph option.
+- When planning a new project or pipeline, propose a directory structure
+  (with a tree diagram) before implementation.
+
+# Rules
+- Always use full country names in tables and figures, never ISO3 codes.
+- Tables in PDFs must never break across pages.
+- Use relative file paths in all scripts.
+- Do not modify or delete data files without asking me first.
+- No clutter in project root: logs go in batch_logs/, temp data in data/temp/.
+- Script-first: if asked to save a graph, table, or dataset, write a script
+  in code/ and execute from that file.
+
+# Verification
+- After any merge, report the number of matched and unmatched observations.
+- After any regression, confirm the number of observations and the fixed effects used.
+- Every empirical claim must reference a specific table, figure, or number.</code></pre>
+      </div>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Start small</span>
+        <p>Begin with 3 to 5 rules. Add one each time you catch yourself correcting Claude on the same thing twice. Your CLAUDE.md should grow organically from real mistakes, not from trying to anticipate every scenario.</p>
+      </aside>
+
+      <h3>What makes a good rule</h3>
+
+      <p>Good rules are specific and verifiable. Compare:</p>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Too vague</span>
+          <p>"Write good Stata code."</p>
+          <p>"Be careful with data."</p>
+          <p>"Follow best practices."</p>
+        </div>
+        <div class="good">
+          <span class="label">Specific and actionable</span>
+          <p>"Use relative file paths in all Stata scripts."</p>
+          <p>"After any merge, report matched/unmatched observation counts."</p>
+          <p>"Cluster standard errors at the firm level unless I specify otherwise."</p>
+        </div>
+      </div>
+
+      <h3>2. Skills: reusable commands</h3>
+
+      <p>A skill (also called a custom command) is a reusable prompt you can invoke with a slash command. If you find yourself giving Claude the same multi-step instruction repeatedly, turn it into a skill.</p>
+
+      <p>Skills are markdown files stored in <code>~/.claude/commands/</code>. The filename becomes the command name. For example, <code>check-merge.md</code> becomes <code>/check-merge</code>.</p>
+
+      <div class="code-block">
+        <div class="code-header">~/.claude/commands/check-merge.md</div>
+        <pre><code>Review the most recent merge in the current Stata do-file.
+Check:
+1. Are the merge keys correct? (Compare against the actual variable names in both datasets.)
+2. How many observations matched vs. unmatched? (Run a tabulation of _merge.)
+3. Did the merge change the number of observations unexpectedly?
+4. Are there duplicate keys that could cause a many-to-many merge?
+
+Report findings and flag anything suspicious.</code></pre>
+      </div>
+
+      <p>Now whenever you type <code>/check-merge</code> in Claude Code, it runs this entire review automatically.</p>
+
+      <p>One caveat: skills need to follow a specific format to work reliably. Every skill file must start with a YAML frontmatter block that tells Claude Code the skill's name, description, and what tools it can use. Here is what that looks like:</p>
+
+      <div class="code-block">
+        <div class="code-header">Skill format (required header)</div>
+        <pre><code>---
+name: check-merge
+description: Review the most recent merge in a Stata do-file for correctness.
+argument-hint: "[path to do-file]"
+allowed-tools: ["Read", "Bash", "Grep"]
+---
+
+Your skill instructions go here.
+Use $ARGUMENTS to capture what the user types after the command.
+Use @path/to/file.md to include shared reference files.</code></pre>
+      </div>
+
+      <p>Without this header, the skill will still run, but Claude Code will not know what tools to allow, will not display helpful hints, and may not behave as expected. Many skill examples you find online skip this header entirely. They will silently underperform or break.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Always use /skill-creator</span>
+        <p>When you want to create a new skill, do not write the file yourself. Use the <code>/skill-creator</code> command instead. Describe what you want the skill to do, and it will generate a properly formatted skill file for you. This is the safe default. It gets the structure right so you do not have to learn it.</p>
+      </aside>
+
+      <h3>3. Settings: permissions and connections</h3>
+
+      <p>By default, Claude Code asks for your permission before every action: editing a file, running a command, anything. This is safe and correct when you are starting out.</p>
+
+      <p>As you get more comfortable, you will find some of these permission prompts annoying. The fix is simple: just tell Claude. Say something like "stop asking me permission to run Stata commands" or "allow all read-only file operations without asking." Claude will automatically update your settings file. You do not need to edit any JSON yourself.</p>
+
+      <p>This is also where MCP connections live (the tool connections to Stata, Google Workspace, etc.). Adrien configures these during onboarding. If an MCP connection breaks, tell Adrien.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Do not overthink permissions</span>
+        <p>Start with the defaults. Every time Claude asks for permission and you think "I always want to allow this," tell it. Your permissions will grow organically, just like your CLAUDE.md rules.</p>
+      </aside>
+
+      <h2 id="project-layer">The Project Layer</h2>
+
+      <p>Yes, you will have <em>two</em> CLAUDE.md files. This is normal and expected. One is global (in <code>~/.claude/CLAUDE.md</code>), the other lives in the project folder itself (in <code>your-project/CLAUDE.md</code>). They serve different purposes:</p>
+
+      <ul>
+        <li><strong>Global CLAUDE.md</strong>: who you are and how you always work. Your role, your tools, your universal formatting rules. Things that are true regardless of which project you are in.</li>
+        <li><strong>Project CLAUDE.md</strong>: what <em>this specific project</em> needs. Dataset names, variable conventions, file structure, which files not to touch, what stage the work is at.</li>
+      </ul>
+
+      <p>When you start Claude Code in a project folder, it reads your global CLAUDE.md first, then the project CLAUDE.md on top. You get both layers merged automatically.</p>
+
+      <p>Here is what a project CLAUDE.md looks like in practice:</p>
+
+      <div class="code-block">
+        <div class="code-header">project/CLAUDE.md</div>
+        <pre><code># Project: Trade and Misallocation
+Main data: data/firm_panel.dta (firm-year level, 2005-2020)
+Key variables: revenue, employment, tfp_op (Olley-Pakes TFP)
+ID variable: firm_id (not id, not firmid)
+
+# File Structure
+- All do-files go in code/
+- Output tables go in output/tables/
+- Figures go in output/figures/
+- Temp data goes in data/temp/ (never in project root)
+
+# Current State
+- Merge with trade data is done (code/01_merge.do)
+- Working on baseline regressions (code/02_regressions.do)
+- Do NOT modify 01_merge.do without asking first
+
+# Verification
+After any merge, report matched/unmatched observation counts.
+After any regression, confirm the number of observations and FE used.</code></pre>
+      </div>
+
+      <p>Notice what goes here and what does not. The project CLAUDE.md says "the ID variable is <code>firm_id</code>" because that is specific to this dataset. It does not say "use full country names in tables" because that is a universal rule that belongs in your global file. The project file answers: what are the files, what are the variables, what is off-limits, where are we in the work.</p>
+
+      <h3>The contradiction problem</h3>
+
+      <p>Here is the catch: when the project file and the global file disagree, <em>the project file wins</em>. This is usually what you want. But it means a project CLAUDE.md can accidentally override your universal rules without you realizing it.</p>
+
+      <p>For example, your global file says "always use full country names." But your project file says "use ISO3 codes for brevity in intermediate tables." Now Claude uses ISO3 codes in that project, including in your final output tables. You never asked for that. It just happened because the project rule overrode the global one.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Avoid contradictions</span>
+        <p>Every time you create or update a project CLAUDE.md, open a fresh conversation and ask: <code>Read my global CLAUDE.md at ~/.claude/CLAUDE.md and compare it against this project's CLAUDE.md. Flag any rules that contradict or could override my global preferences.</code> This takes ten seconds and catches problems before they cause silent errors in your output.</p>
+      </aside>
+
+      <p>Projects can also have their own skills in <code>.claude/commands/</code> within the project folder. These only appear when you are working in that project.</p>
+
+      <h2 id="team-skills">Team Skills</h2>
+
+      <p>Some skills are shared across the team. These are maintained by Adrien and live in a shared repository. During onboarding, you will get access to the team skills and instructions on how to install them.</p>
+
+      <p>Key team skills you will use:</p>
+
+      <ul>
+        <li><code>/review-plan</code>: structured review of any plan or document (used in the <a href="core-workflow.html">Core Workflow</a>)</li>
+        <li><code>/audit-code</code>: systematic code review against project conventions</li>
+        <li><code>/compile-latex</code>: compile a LaTeX document, fix errors, and re-compile until it builds cleanly</li>
+        <li><code>/prompt</code>: reformats a rough, dictated request into a structured prompt before executing it (useful with voice dictation)</li>
+        <li><code>/oracle</code>: independent verification of a previous conversation's output (the Independence Principle in action)</li>
+      </ul>
+
+      <p>For the complete list of available skills, see the <a href="https://github.com/amatray/claude-skills-public">skill library on GitHub</a>.</p>
+
+      <p>These are <em>custom</em> skills, not built-in Claude Code commands. They will not work until installed. Adrien will set this up with you during your first week.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Built-in vs. custom</span>
+        <p>Commands like <code>/plan</code>, <code>/clear</code>, and <code>/compact</code> are built into Claude Code and work out of the box. Commands like <code>/review-plan</code> and <code>/audit-code</code> are team skills that require setup. If a slash command does not work, check whether it is a custom skill that needs to be installed.</p>
+      </aside>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Shortcut: reference styles you like</span>
+        <p>Instead of specifying 15 individual formatting parameters, reference a style: "Follow Kieran Healy's best practices for data visualization" or "Format this table like tables in the QJE." Claude translates style references into specific implementation choices. This works for figures, tables, writing, and LaTeX formatting. You direct the output; Claude handles the details.</p>
+      </aside>
+
+      <h2>MCP Connections: External Tools</h2>
+
+      <p>Claude Code can connect to external tools through something called MCP (Model Context Protocol). This is how Claude Code talks to Stata, Google Workspace, and other software on your machine.</p>
+
+      <p>For example, when you ask Claude Code to run Stata code, it does not open Stata the way you would. It routes the command through an MCP connection to your local Stata installation. The result comes back into the conversation.</p>
+
+      <p>You do not need to set up MCP yourself. Adrien configures this during onboarding. What you need to know is that when Claude Code runs Stata code or checks your calendar, it is using MCP under the hood. If an MCP connection breaks, tell Adrien.</p>
+
+      <h2>The Automation Ladder</h2>
+
+      <p>Here is how your setup should evolve over time:</p>
+
+      <ol>
+        <li><strong>Week 1</strong>: You correct Claude manually. "No, the variable is called UNRATE, not unemployment_rate." This is normal.</li>
+        <li><strong>Week 2</strong>: You notice you keep making the same corrections. You add them to your CLAUDE.md. The corrections stop.</li>
+        <li><strong>Month 2</strong>: You notice you run the same multi-step workflow repeatedly. You turn it into a skill. Now it is one command.</li>
+        <li><strong>Month 3+</strong>: Your setup is tailored to you. Claude knows your conventions, your data, your project structure. New tasks run smoothly because the rules are already in place.</li>
+      </ol>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">The compound effect</span>
+        <p>Every rule you add makes every future conversation better. This is the real return on investment. Not any single conversation, but the system you build over months.</p>
+      </aside>
+
+      <p>Even configured well, AI fails in predictable ways. Learn the patterns.</p>
+
+      <nav class="page-nav">
+        <a href="core-workflow.html" class="prev">&larr; Core Workflow</a>
+        <a href="common-failures.html" class="next">Common Failures &rarr;</a>
+      </nav>
+
+      <footer class="page-footer">
+        Last verified: May 2026
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

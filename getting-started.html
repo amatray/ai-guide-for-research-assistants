@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started - Claude Code for RAs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
+</head>
+<body>
+  <details class="mobile-nav">
+    <summary>Claude Code for RAs - Menu</summary>
+    <ul class="nav-links">
+      <li><a href="index.html">Philosophy</a></li>
+      <li><a href="getting-started.html" class="nav-active">Getting Started</a></li>
+      <li><a href="core-workflow.html">Core Workflow</a></li>
+      <li><a href="making-it-yours.html">Making It Yours</a></li>
+      <li><a href="common-failures.html">Common Failures</a></li>
+      <li><a href="async-workflows.html">Async Workflows</a></li>
+      <li><a href="large-datasets.html">Large Datasets</a></li>
+    </ul>
+  </details>
+
+  <div class="page-wrapper">
+    <nav class="site-nav">
+      <div class="nav-brand">
+        <span class="nav-title">Claude Code for RAs</span>
+        <span class="nav-subtitle">A Guide by Adrien Matray</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Philosophy</a></li>
+        <li><a href="getting-started.html" class="nav-active">Getting Started</a></li>
+        <li><a href="core-workflow.html">Core Workflow</a></li>
+        <li><a href="making-it-yours.html">Making It Yours</a></li>
+        <li><a href="common-failures.html">Common Failures</a></li>
+        <li><a href="async-workflows.html">Async Workflows</a></li>
+        <li><a href="large-datasets.html">Large Datasets</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Getting Started</h1>
+
+      <p>This page gets you from zero to a working Claude Code installation. By the end, you will have run your first conversation and understood what happened under the hood.</p>
+
+      <h2>Prerequisites</h2>
+
+      <p>You need three things installed before proceeding:</p>
+
+      <ul>
+        <li><strong>macOS or Linux</strong> (Claude Code runs in a Unix terminal)</li>
+        <li><strong>VS Code</strong> (your code editor; download from <a href="https://code.visualstudio.com">code.visualstudio.com</a>)</li>
+        <li><strong>Git</strong> (version control; run <code>git --version</code> in a terminal. If macOS prompts you to install Xcode Command Line Tools, accept.)</li>
+      </ul>
+
+      <p>You do not need to know how to use a terminal. You need to know how to <em>open</em> one. In VS Code: <code>Ctrl+`</code> (backtick), or from the menu: Terminal > New Terminal. That is it. Once the terminal is open, you type <code>claude</code> and from that point on you are talking to Claude Code, not the terminal.</p>
+
+      <h2>Installing Claude Code</h2>
+
+      <p>Open a terminal (in VS Code or standalone) and run:</p>
+
+      <div class="code-block">
+        <div class="code-header">Terminal</div>
+        <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+      </div>
+
+      <p>Once installed, navigate to any project folder and start Claude Code:</p>
+
+      <div class="code-block">
+        <div class="code-header">Terminal</div>
+        <pre><code>cd ~/your-project-folder
+claude</code></pre>
+      </div>
+
+      <p>The first time you run <code>claude</code>, it will ask you to authenticate with your Anthropic account. Follow the prompts in your browser.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Common installation issues</span>
+        <p><strong>"npm: command not found"</strong>: You need Node.js. Install it from <a href="https://nodejs.org">nodejs.org</a> (choose the LTS version), then try again.</p>
+        <p><strong>"permission denied" or "EACCES"</strong>: Do not use <code>sudo</code>. Instead, fix npm permissions: <a href="https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally">see the npm docs</a>.</p>
+        <p><strong>"claude: command not found" after install</strong>: Your PATH may not include npm's global bin directory. Close and reopen your terminal, or run <code>npx @anthropic-ai/claude-code</code> as a workaround.</p>
+      </aside>
+
+      <h2>VS Code: Your Starting Point</h2>
+
+      <p>When you first open VS Code, you see the Welcome screen. On the left is the Explorer sidebar (currently empty because no folder is open). In the center, you see options to open a folder, clone a repository, and your recent projects.</p>
+
+      <figure class="screenshot">
+        <img src="img/screenshots/vscode-entry-point.png" alt="The VS Code Welcome screen with no folder open. A red box highlights the Extensions icon in the left sidebar, which is where you click to install Claude Code.">
+      </figure>
+
+      <p>Before you can use Claude Code, you need to install it. Click the Extensions icon in the left sidebar (highlighted in red above), search for "Claude Code," and install it. Once installed, you will see a small Claude icon appear in your left sidebar.</p>
+
+      <h3>Open your project folder</h3>
+
+      <p>This is the single most important thing to understand about VS Code. When you click "Open Folder" and select a project directory, VS Code works <em>inside</em> that folder. Everything you see in the Explorer sidebar (the file tree on the left) is the contents of that folder. And Claude Code can read and edit anything inside that folder, but nothing outside it.</p>
+
+      <p>This is why you always start by opening the right folder. If you are working on a project that lives in <code>~/Dropbox/my-project/</code>, open that folder. Claude will see all the data, code, and output files inside it. If you open the wrong folder (or no folder at all), Claude is working blind.</p>
+
+      <h3>Using Claude Code</h3>
+
+      <p>With the extension installed and a folder open, click the Claude icon in the left sidebar. A conversation panel opens on the right. You type your message at the bottom, and Claude's responses appear above. When Claude wants to run a command or edit a file, it asks for your permission first. You can accept, reject, or modify.</p>
+
+      <figure class="screenshot">
+        <img src="img/screenshots/vscode_running.png" alt="VS Code with a project folder open in the Explorer sidebar, a document open in the central editor, and the Claude Code conversation panel on the right.">
+      </figure>
+
+      <p>Your screen has three panels. On the left, the <em>Explorer</em> shows the full folder tree of your project: every subfolder, every file. In the center, the <em>editor</em> is where you view and edit documents. VS Code can display many file types natively: Markdown, CSV, plain text, and more. For others (PDF, Excel, Word), you may need a small extension. Click the Extensions icon in the left sidebar (the same place you installed Claude Code), search for the file type you need (for example, "PDF viewer" or "Excel viewer"), and install. On the right, the <em>Claude Code</em> panel is where you have your conversation.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Screenshots work</span>
+        <p>Claude Code reads images natively. If you are stuck on something visual, take a screenshot and paste it into the conversation. This is often faster than describing the problem in words.</p>
+      </aside>
+
+      <h2>Just Ask, in Practice</h2>
+
+      <p>Recall the principle: you do not need to craft a perfect prompt. Here are real examples of first messages that work perfectly well:</p>
+
+      <ul>
+        <li>"I have a CSV in this folder and I don't know what's in it. Can you look at it?"</li>
+        <li>"Here's an error I'm getting" (paste the error or a screenshot)</li>
+        <li>"What files are in this project and what do they do?"</li>
+        <li>"How do I save this conversation to continue later?"</li>
+      </ul>
+
+      <p>All of these are fine. Claude Code will figure out what you mean. The barrier to asking should be zero.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Strong recommendation: voice dictation</span>
+        <p>Install <a href="https://www.wispr.flow">Wispr Flow</a> (or a similar voice dictation tool). Instead of typing your requests, you talk and it types for you. This sounds like a small convenience; in practice, it changes how you work. You think in full sentences and paragraphs, not in short typed fragments. Your prompts become more detailed and more natural, which means better output from Claude. I use it for almost every interaction.</p>
+      </aside>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Overthinking it</span>
+          <p>"As an expert data analyst, please examine the CSV file located at ./data/raw/survey_results.csv and provide a comprehensive summary of its schema, data types, missing value patterns, and potential quality issues, formatted as a structured report."</p>
+        </div>
+        <div class="good">
+          <span class="label">Just ask</span>
+          <p>"Can you look at the CSV in data/raw/ and tell me what's in it?"</p>
+        </div>
+      </div>
+
+      <p>Both get you the same result. The second one took three seconds to type.</p>
+
+      <h2>Managing Conversations</h2>
+
+      <p>From the <a href="index.html">Philosophy</a> page, you know conversations degrade over time. Here are the practical mechanics:</p>
+
+      <ul>
+        <li><code>/clear</code>: resets the conversation. Claude forgets everything from this session.</li>
+        <li><code>/compact</code>: compresses the conversation into a summary, freeing up context space without fully resetting.</li>
+        <li>Starting a new terminal session gives you a completely fresh start.</li>
+      </ul>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">The 30-40 exchange rule</span>
+        <p>One focused task per conversation. When you finish a task, clear. When quality drops, clear. If your conversation exceeds roughly 30 to 40 exchanges, it is time to start fresh.</p>
+      </aside>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">The handoff trick</span>
+        <p>Before clearing, ask: "Write a short markdown summary of where we are, what was done, and what is left." Save it, then paste it into your next conversation. Zero context loss, fresh context window.</p>
+      </aside>
+
+      <p>You do not always need to do this manually. Claude Code has memory across sessions: it can recall prior conversations, remember decisions you made, and pick up context from previous work. If you start a new conversation and say "we were working on the merge script yesterday," it will often know what you mean. The handoff trick is your safety net for when you need a clean, reliable transfer. But in practice, Claude Code is better at continuity than you might expect.</p>
+
+      <h2>Costs and Limits</h2>
+
+      <p>Claude Code uses tokens (roughly: words processed). Longer conversations consume more tokens, which cost money. Your subscription runs through my account, so please be mindful.</p>
+
+      <p>If you hit a rate limit, that is your signal to clear and restart with focused context. Do not waste tokens on rambling, unfocused conversations. A clear question in a fresh context is both cheaper and produces better results than a vague question buried in a long thread.</p>
+
+      <h2>Your First Conversation</h2>
+
+      <p>Try this as your first task. Navigate to a project folder you already know well (one where you know what the files are), then start Claude Code:</p>
+
+      <div class="code-block">
+        <div class="code-header">Terminal</div>
+        <pre><code>cd ~/path/to/a/project/you/know
+claude</code></pre>
+      </div>
+
+      <p>Then type:</p>
+
+      <div class="code-block">
+        <div class="code-header">Your message</div>
+        <pre><code>What is in this project? Describe the file structure and what each file does.</code></pre>
+      </div>
+
+      <p>Watch what happens. Claude Code will read your files and describe the project. Now comes the important part.</p>
+
+      <h2>Understanding What Just Happened</h2>
+
+      <p>Claude Code just read your files and produced a description. Before you move on, verify it:</p>
+
+      <ul>
+        <li>Did it identify the right files? Check against what you see in the file tree.</li>
+        <li>Did it describe them accurately? You know this project; you can tell if it is wrong.</li>
+        <li>Did it miss anything? Important files it skipped or mischaracterized?</li>
+        <li>Did it make anything up? Files that do not exist, functions it invented?</li>
+      </ul>
+
+      <p>This is why we chose a project you already know. You have the ground truth. You can verify every claim. This is the verification mindset in practice: start with tasks where you <em>can</em> check the output, so you build the habit before working on tasks where checking is harder.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">The pattern</span>
+        <p>Every time Claude Code produces output, ask yourself: what do I expect to see, and does this match? If you cannot state what you expect, you are not ready to trust the output.</p>
+      </aside>
+
+      <p>You are ready for the core workflow: plan, review, execute, verify.</p>
+
+      <nav class="page-nav">
+        <a href="index.html" class="prev">&#8592; Philosophy</a>
+        <a href="core-workflow.html" class="next">Core Workflow &#8594;</a>
+      </nav>
+
+      <footer class="page-footer">
+        Last verified: May 2026
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

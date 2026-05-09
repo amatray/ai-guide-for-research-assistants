@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Async Workflows - Claude Code for RAs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
+</head>
+<body>
+  <details class="mobile-nav">
+    <summary>Claude Code for RAs - Menu</summary>
+    <ul class="nav-links">
+      <li><a href="index.html">Philosophy</a></li>
+      <li><a href="getting-started.html">Getting Started</a></li>
+      <li><a href="core-workflow.html">Core Workflow</a></li>
+      <li><a href="making-it-yours.html">Making It Yours</a></li>
+      <li><a href="common-failures.html">Common Failures</a></li>
+      <li><a href="async-workflows.html" class="nav-active">Async Workflows</a></li>
+      <li><a href="large-datasets.html">Large Datasets</a></li>
+    </ul>
+  </details>
+
+  <div class="page-wrapper">
+    <nav class="site-nav">
+      <div class="nav-brand">
+        <span class="nav-title">Claude Code for RAs</span>
+        <span class="nav-subtitle">A Guide by Adrien Matray</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Philosophy</a></li>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="core-workflow.html">Core Workflow</a></li>
+        <li><a href="making-it-yours.html">Making It Yours</a></li>
+        <li><a href="common-failures.html">Common Failures</a></li>
+        <li><a href="async-workflows.html" class="nav-active">Async Workflows</a></li>
+        <li><a href="large-datasets.html">Large Datasets</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Async Workflows</h1>
+
+      <p>Everything so far has been interactive: you type, Claude responds, you review, you iterate. But there is another mode of working with AI that becomes useful once you are comfortable with the basics.</p>
+
+      <h2>Two Modes of Working with AI</h2>
+
+      <p>There are fundamentally two ways to use AI for tasks:</p>
+
+      <ul>
+        <li><strong>Interactive (supervised)</strong>: You are in the loop. You watch what AI does, correct it in real time, review each step. This is what Claude Code does by default. Good for exploration, complex tasks, and anything that requires judgment.</li>
+        <li><strong>Async (fire-and-forget)</strong>: You describe a task, hand it off, and come back later to check the result. AI works on its own without your supervision. Good for well-defined, bounded tasks where you can verify the output after the fact.</li>
+      </ul>
+
+      <p>Most of your work will be interactive, especially early on. Async becomes valuable once you have tasks that are clearly specified and easy to verify.</p>
+
+      <h2>When Interactive Wins</h2>
+
+      <p>Use interactive mode (Claude Code conversations) when:</p>
+
+      <ul>
+        <li>You are exploring data and do not know exactly what you want yet</li>
+        <li>The task requires domain knowledge mid-process (choosing a specification, interpreting results)</li>
+        <li>The output is hard to verify after the fact (you need to see it being built)</li>
+        <li>You are iterating: plan, review, correct, repeat</li>
+        <li>The task touches multiple files or has complex dependencies</li>
+      </ul>
+
+      <p>In practice, this covers most research work. Data cleaning, regression analysis, writing code, debugging, and any task where your judgment shapes the output.</p>
+
+      <h2>When Async Wins</h2>
+
+      <p>Async mode shines when:</p>
+
+      <ul>
+        <li>The task is well-defined with clear inputs and outputs</li>
+        <li>You can verify the result by inspection (checking a file, reading output, running a test)</li>
+        <li>The task is bounded (it should not require judgment calls mid-process)</li>
+        <li>You have multiple independent tasks that could run in parallel</li>
+      </ul>
+
+      <p>Examples from research work:</p>
+
+      <ul>
+        <li>Formatting 20 tables to match a journal's style guide</li>
+        <li>Converting a batch of do-files from Stata 14 to Stata 18 syntax</li>
+        <li>Adding standardized headers and comments to all scripts in a project</li>
+        <li>Running the same cleaning pipeline on multiple datasets</li>
+      </ul>
+
+      <h2>A Decision Framework</h2>
+
+      <p>When deciding which mode to use, ask three questions:</p>
+
+      <ol>
+        <li><strong>Can I specify this task completely in advance?</strong> If yes, async might work. If you need to make decisions along the way, stay interactive.</li>
+        <li><strong>Can I verify the result after the fact?</strong> If the output is a file you can check, async works. If verification requires understanding the process (not just the result), stay interactive.</li>
+        <li><strong>Is the task reversible?</strong> If something goes wrong, can you undo it? If yes, async is safe to try. If the task modifies irreplaceable data, stay interactive.</li>
+      </ol>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Rule of thumb</span>
+        <p>If you would be comfortable handing this task to an RA with clear written instructions and checking the output later, it is a good candidate for async. If you would want to sit with the RA and guide them through it, keep it interactive.</p>
+      </aside>
+
+      <h2>Combining Both Modes</h2>
+
+      <p>The most effective workflow often combines both:</p>
+
+      <ol>
+        <li><strong>Interactive</strong>: Use Claude Code to plan the task, review the approach, and verify it on a small sample.</li>
+        <li><strong>Async</strong>: Once the approach is verified, hand off the full batch to run without supervision.</li>
+        <li><strong>Interactive</strong>: Review the results, spot-check, and iterate if needed.</li>
+      </ol>
+
+      <p>This is the pattern for most batch operations. You would not send 50 tables to be reformatted without first testing the formatting on one table interactively. Once it works, you batch the rest.</p>
+
+      <h2>Current Tools</h2>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">As of May 2026</span>
+        <p>This section describes specific tools available today. The async AI landscape is changing rapidly. Evaluate new tools against the framework above, not against what is listed here.</p>
+      </aside>
+
+      <p><strong>Claude Code</strong> is primarily interactive. You can give it longer-running tasks, but you are still in the conversation, watching it work.</p>
+
+      <p><strong>Codex (OpenAI)</strong> is the main async coding agent available today. You describe a task, it works on it independently, and you review the result later. It is best suited for the bounded, well-specified tasks described above.</p>
+
+      <p><strong>Claude Code with background agents</strong> also supports fire-and-forget patterns for bounded tasks. The tool you use matters less than the framework: can you specify it clearly, can you verify the result, and is it reversible?</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">The durable lesson</span>
+        <p>Tools will change. The interactive vs. async distinction will not. Learn to recognize which mode fits each task, and you will adapt to whatever tools come next.</p>
+      </aside>
+
+      <p>For large-data pipelines that combine both modes (interactive planning, async batch processing), see the <a href="large-datasets.html">Large Datasets</a> page.</p>
+
+      <nav class="page-nav">
+        <a href="common-failures.html" class="prev">&larr; Common Failures</a>
+        <a href="large-datasets.html" class="next">Large Datasets &rarr;</a>
+      </nav>
+
+      <footer class="page-footer">
+        Last verified: May 2026
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

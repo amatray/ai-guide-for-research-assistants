@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Common Failures - Claude Code for RAs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
+</head>
+<body>
+  <details class="mobile-nav">
+    <summary>Claude Code for RAs - Menu</summary>
+    <ul class="nav-links">
+      <li><a href="index.html">Philosophy</a></li>
+      <li><a href="getting-started.html">Getting Started</a></li>
+      <li><a href="core-workflow.html">Core Workflow</a></li>
+      <li><a href="making-it-yours.html">Making It Yours</a></li>
+      <li><a href="common-failures.html" class="nav-active">Common Failures</a></li>
+      <li><a href="async-workflows.html">Async Workflows</a></li>
+      <li><a href="large-datasets.html">Large Datasets</a></li>
+    </ul>
+  </details>
+
+  <div class="page-wrapper">
+    <nav class="site-nav">
+      <div class="nav-brand">
+        <span class="nav-title">Claude Code for RAs</span>
+        <span class="nav-subtitle">A Guide by Adrien Matray</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Philosophy</a></li>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="core-workflow.html">Core Workflow</a></li>
+        <li><a href="making-it-yours.html">Making It Yours</a></li>
+        <li><a href="common-failures.html" class="nav-active">Common Failures</a></li>
+        <li><a href="async-workflows.html">Async Workflows</a></li>
+        <li><a href="large-datasets.html">Large Datasets</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Common Failures</h1>
+
+      <p>AI fails in predictable ways. Once you learn the patterns, you catch them faster. This page is a taxonomy of how things go wrong and what to do about it.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Remember</span>
+        <p>AI will <em>never</em> tell you it is unsure. It presents everything with equal confidence. Your skepticism is the only quality filter.</p>
+      </aside>
+
+      <h2>The Failure Taxonomy</h2>
+
+      <p>Most AI failures fall into eight categories:</p>
+
+      <div class="taxonomy-grid">
+        <div class="taxonomy-card"><strong>Hallucination</strong>: making up things that do not exist (file paths, variable names, functions, citations)</div>
+        <div class="taxonomy-card"><strong>Laziness shortcuts</strong>: taking the path of least resistance and presenting it as the right answer</div>
+        <div class="taxonomy-card"><strong>Memory over observation</strong>: using training data instead of checking the current state of your data or code</div>
+        <div class="taxonomy-card"><strong>Scope creep</strong>: doing more than you asked, silently changing things you did not mention</div>
+        <div class="taxonomy-card"><strong>Context degradation</strong>: quality dropping in long conversations as it forgets earlier instructions</div>
+        <div class="taxonomy-card"><strong>Confident domain errors</strong>: getting econometric methodology or domain knowledge wrong with complete confidence</div>
+        <div class="taxonomy-card"><strong>Silent data decisions</strong>: dropping observations, changing merge types, or altering samples without flagging it</div>
+        <div class="taxonomy-card"><strong>Configuration bloat</strong>: your CLAUDE.md or skill files grow so long that Claude starts skimming and missing rules</div>
+      </div>
+
+      <h2>Hallucination</h2>
+
+      <p>Claude will invent things that do not exist and present them as fact. File paths that do not exist on your machine. Variable names that are not in your dataset. Stata commands with options that were never implemented. Functions in packages that do not have those functions.</p>
+
+      <p>The danger is that hallucinated output often <em>looks</em> correct. The file path has a plausible structure. The variable name sounds reasonable. The Stata syntax is almost right.</p>
+
+      <div class="code-block">
+        <div class="code-header">Example: hallucinated variable</div>
+        <pre><code>* Claude writes:
+merge 1:1 firm_id year using "data/trade_flows.dta"
+regress log_revenue trade_exposure i.year, cluster(firm_id)
+
+* Reality:
+* - The variable is called "rev", not "log_revenue"
+* - The file is "data/trade/bilateral_flows.dta", not "data/trade_flows.dta"
+* - Claude invented both names because they sounded plausible</code></pre>
+      </div>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Prevention</span>
+        <p>Add your actual variable names and file paths to your project CLAUDE.md. Claude will use them instead of guessing.</p>
+      </aside>
+
+      <h2>The Laziness Shortcut</h2>
+
+      <p>AI takes the path of least resistance and presents it as the right answer. You ask it to download a large dataset with multiple tables. Instead of downloading everything, it claims some tables are "redundant" or "reconstructable from joins" to justify skipping them. It sounds plausible. It might even be technically accurate about the schema. But it has not actually verified whether those tables contain the same data.</p>
+
+      <p>When you push back, it immediately concedes. "You're right, let me actually check." This is the tell. If the AI concedes instantly when challenged, it was never confident in the first place; it was taking a shortcut.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Prevention</span>
+        <p>When AI suggests skipping something, simplifying something, or claims two things are equivalent, ask it to <em>prove</em> the claim. "Show me the actual row counts." "Run the comparison." Quick fixes and shortcuts are AI's default; the structurally sound solution requires your insistence.</p>
+      </aside>
+
+      <h2>Memory Over Observation</h2>
+
+      <p>This is different from hallucination, and more insidious. AI defaults to what it "remembers" from training data rather than using its available tools to check the current state. The knowledge may be factually correct in general, but wrong for your specific situation.</p>
+
+      <p>Example: you ask whether a database table can bridge two datasets. AI says "yes, that table has a gvkey column," which is true based on the schema it learned during training. But it never actually checks whether the column is populated in your data. When you run a count, you find 3 rows. The schema knowledge was correct; the usefulness claim was not.</p>
+
+      <p>The tell is the same: ask "did you actually check, or are you telling me what you expect to be true?" If the answer starts with "You're right, let me verify...," it was working from memory.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Prevention</span>
+        <p>For any factual claim about your data, code, or files, ask Claude to show its work. "Run <code>describe</code> on the actual data." "Show me <code>ls</code> of that directory." "Count the rows." If it cannot point to output from a tool it just ran, it is telling you what it expects, not what it found.</p>
+      </aside>
+
+      <h2>Scope Creep</h2>
+
+      <p>You ask Claude to fix one thing. It fixes that thing, and also refactors two functions, renames a variable, and adds error handling you did not ask for. Each individual change might be reasonable. Together, they make it impossible to verify what happened.</p>
+
+      <p>This is especially dangerous with data work. You ask Claude to add a variable to a regression. It adds the variable, and also changes the sample restriction, drops an interaction term, and switches from <code>areg</code> to <code>reghdfe</code>. The coefficient you get is different, and you do not know why.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Prevention</span>
+        <p>Always review the diff (<code>git diff</code>) after Claude edits files. If you see changes you did not ask for, reject them. Better yet, add a CLAUDE.md rule: "Only modify what I explicitly ask you to modify. Do not refactor, rename, or reorganize unless I specifically request it."</p>
+      </aside>
+
+      <h2>Context Degradation</h2>
+
+      <p>Long conversations lose quality. Around 30 to 40 exchanges in, Claude starts to:</p>
+
+      <ul>
+        <li>Forget instructions you gave earlier in the conversation</li>
+        <li>Contradict its own previous output</li>
+        <li>Repeat the same suggestion after you already rejected it</li>
+        <li>Produce increasingly generic or formulaic responses</li>
+      </ul>
+
+      <p>This is not a bug you can work around. It is a fundamental limitation. The fix is simple: clear the conversation and start fresh. See <a href="getting-started.html">Managing Conversations</a> in Getting Started.</p>
+
+      <h2>Confident Domain Errors</h2>
+
+      <p>Claude will state econometric methodology with complete confidence, and be wrong. It will suggest an identification strategy that does not address your endogeneity concern. It will recommend clustering at the wrong level. It will describe an estimator's properties incorrectly.</p>
+
+      <p>This is the hardest failure to catch because it requires domain knowledge. A first-year RA may not know that clustering at the state level is wrong when the treatment varies at the firm level. Claude will not flag this. It will present the wrong approach with the same confidence as the right one.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Your defense</span>
+        <p>When Claude suggests a methodological choice, ask yourself: "Would I make this same choice if I were doing this manually?" If you are not sure, ask Adrien before proceeding. Claude is not a substitute for econometric judgment.</p>
+      </aside>
+
+      <h2>Configuration Bloat</h2>
+
+      <p>Remember the mental model: Claude is an over-eager, overconfident collaborator. When you hand it a 10-page briefing document, it does exactly what a rushed human assistant would do. It skims. It reads the first few sections carefully, then starts skipping over details buried deeper in the file. It will never tell you "this file is too long for me to follow reliably." It just quietly stops following some of your rules.</p>
+
+      <p>This happens with your CLAUDE.md files and your skill files. You start with a lean, focused configuration. Over months, you keep adding rules, clarifications, edge cases. The file grows from 50 lines to 200 to 500 to 800. At some point, Claude starts missing instructions that are right there in the file. You catch it breaking a rule you know you wrote down. You check, and the rule is indeed there, on line 347. Claude just did not process it.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">The 500-line limit</span>
+        <p>Keep each CLAUDE.md and skill file under 500 lines. Beyond that, Claude starts skimming and silently dropping rules. Rules near the end of the file get followed less reliably than rules at the top.</p>
+      </aside>
+
+      <h3>How to keep files lean</h3>
+
+      <ul>
+        <li>Your global CLAUDE.md should contain <em>universal</em> rules only. Anything project-specific belongs in the project CLAUDE.md, not the global one.</li>
+        <li>If a multi-step instruction keeps growing, extract it into a skill (a separate command file). One job per file.</li>
+        <li>Remove rules you no longer need. If a project is done, clean out the project CLAUDE.md. If a rule was specific to a dataset you no longer use, delete it.</li>
+        <li>Prioritize: put your most important rules at the top of the file, not buried at the bottom.</li>
+      </ul>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Periodic review</span>
+        <p>Every month or so, ask Claude in a fresh conversation: <code>Read my CLAUDE.md. Is it getting too long? If so, prune dead rules, remove redundancies, move anything project-specific to the project CLAUDE.md, and extract repeated multi-step instructions into skills.</code> Claude will do the work. You just ask.</p>
+      </aside>
+
+      <h2>Bad Prompts vs. Good Prompts</h2>
+
+      <p>The way you ask matters. Not because you need special syntax, but because vague requests produce vague output.</p>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Vague</span>
+          <p>"Clean this data."</p>
+        </div>
+        <div class="good">
+          <span class="label">Specific</span>
+          <p>"Drop observations where revenue is missing or negative. Keep all other observations. Report how many were dropped."</p>
+        </div>
+      </div>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Vague</span>
+          <p>"Run a regression."</p>
+        </div>
+        <div class="good">
+          <span class="label">Specific</span>
+          <p>"Regress log revenue on trade_exposure with firm and year fixed effects, clustering at the firm level. Use the sample from 2005-2020."</p>
+        </div>
+      </div>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Vague</span>
+          <p>"Make a table."</p>
+        </div>
+        <div class="good">
+          <span class="label">Specific</span>
+          <p>"Create a LaTeX table with columns (1)-(3), showing progressively richer fixed effects. Include N, R-squared, and fixed effect indicators at the bottom."</p>
+        </div>
+      </div>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Vague</span>
+          <p>"Fix the error."</p>
+        </div>
+        <div class="good">
+          <span class="label">Specific</span>
+          <p>"The merge is failing because firm_id has leading zeros in the master dataset but not in the using dataset. Fix the merge keys to match."</p>
+        </div>
+      </div>
+
+      <h2>Verification Recipes</h2>
+
+      <p>Quick checklists for common tasks:</p>
+
+      <h3>After a Stata do-file runs</h3>
+      <ul>
+        <li>Check the log for error messages (even if Claude says it ran fine)</li>
+        <li>Verify observation counts at each step</li>
+        <li>Confirm variable names match the actual data</li>
+        <li>Check that file paths resolve to real files</li>
+      </ul>
+
+      <h3>After a merge</h3>
+      <ul>
+        <li>Tabulate <code>_merge</code>: how many matched vs. unmatched?</li>
+        <li>Compare observation count before and after</li>
+        <li>Check for duplicates on the merge key</li>
+        <li>Spot-check a few observations manually</li>
+      </ul>
+
+      <h3>After a LaTeX table</h3>
+      <ul>
+        <li>Does the table compile without errors?</li>
+        <li>Do the numbers match the Stata output?</li>
+        <li>Are the fixed effect indicators correct?</li>
+        <li>Does the table fit on one page?</li>
+      </ul>
+
+      <h3>After any file edit</h3>
+      <ul>
+        <li>Run <code>git diff</code>: are the changes exactly what you asked for?</li>
+        <li>Are there changes you did not request?</li>
+        <li>Did it modify files you did not mention?</li>
+      </ul>
+
+      <h2>When to Stop and Do It Yourself</h2>
+
+      <p>AI is not always the right tool. Stop using it and switch to manual work when:</p>
+
+      <ul>
+        <li>You have corrected Claude on the same issue three times and it keeps making the same mistake</li>
+        <li>The task requires judgment that you cannot verify (e.g., "is this identification strategy valid?")</li>
+        <li>You are spending more time fixing Claude's output than it would take to do the task yourself</li>
+        <li>The task involves sensitive data that should not be processed by external tools</li>
+      </ul>
+
+      <p>There is no shame in doing something manually. AI is a multiplier, not a replacement for your skills.</p>
+
+      <h2>When to Escalate</h2>
+
+      <p>Some situations require help. Escalate to Adrien when:</p>
+
+      <ul>
+        <li>Claude is stuck in a loop, producing the same error three or more times</li>
+        <li>You have been trying to fix something for more than 15 minutes and you are not making progress</li>
+        <li>Claude is suggesting something you do not understand and cannot verify</li>
+        <li>An MCP connection is broken (Stata, Google Workspace, etc.)</li>
+        <li>You are unsure whether a methodological choice is correct</li>
+      </ul>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">No hesitation</span>
+        <p>Asking for help is not a failure. Spending two hours fighting Claude when a five-minute conversation with Adrien would solve it is a failure. Escalate early.</p>
+      </aside>
+
+      <p>Learn when to hand off tasks and let AI work without supervision.</p>
+
+      <nav class="page-nav">
+        <a href="making-it-yours.html" class="prev">&larr; Making It Yours</a>
+        <a href="async-workflows.html" class="next">Async Workflows &rarr;</a>
+      </nav>
+
+      <footer class="page-footer">
+        Last verified: May 2026
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

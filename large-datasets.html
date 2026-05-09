@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Large Datasets - Claude Code for RAs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
+</head>
+<body>
+  <details class="mobile-nav">
+    <summary>Claude Code for RAs - Menu</summary>
+    <ul class="nav-links">
+      <li><a href="index.html">Philosophy</a></li>
+      <li><a href="getting-started.html">Getting Started</a></li>
+      <li><a href="core-workflow.html">Core Workflow</a></li>
+      <li><a href="making-it-yours.html">Making It Yours</a></li>
+      <li><a href="common-failures.html">Common Failures</a></li>
+      <li><a href="async-workflows.html">Async Workflows</a></li>
+      <li><a href="large-datasets.html" class="nav-active">Large Datasets</a></li>
+    </ul>
+  </details>
+
+  <div class="page-wrapper">
+    <nav class="site-nav">
+      <div class="nav-brand">
+        <span class="nav-title">Claude Code for RAs</span>
+        <span class="nav-subtitle">A Guide by Adrien Matray</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Philosophy</a></li>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="core-workflow.html">Core Workflow</a></li>
+        <li><a href="making-it-yours.html">Making It Yours</a></li>
+        <li><a href="common-failures.html">Common Failures</a></li>
+        <li><a href="async-workflows.html">Async Workflows</a></li>
+        <li><a href="large-datasets.html" class="nav-active">Large Datasets</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Working with Large Datasets</h1>
+
+      <p>You may not need this page on day one. Come back here when you encounter a dataset that does not fit comfortably in Stata or pandas.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Prerequisites</span>
+        <p>This page assumes Python is installed on your machine. If it is not, ask Claude to help you install it. DuckDB installs via <code>pip install duckdb</code>, but Claude will handle this for you when needed.</p>
+      </aside>
+
+      <h2>The Problem (and the New Tradeoff)</h2>
+
+      <p>Most economists work with CSVs and <code>.dta</code> files. For small datasets, this is fine. But when data grows to 10, 50, or 70 gigabytes, the familiar workflow breaks down. Stata crawls. Pandas crashes. You cannot even open the file in Excel.</p>
+
+      <p>The typical response is to make do: split the data into pieces, load one year at a time, save intermediate files everywhere, lose track of which version is which. You end up with a folder full of <code>data_v2_final_FINAL.csv</code> files and no documentation.</p>
+
+      <p>There is a better approach: convert your data to a compressed columnar format (parquet), store it in a queryable database (DuckDB), and document it with metadata tables. Until recently, learning these tools was a week-long investment hard to justify for any single project.</p>
+
+      <p>With Claude Code, you describe what you want in plain English and get a professional-grade pipeline in an afternoon. The pattern works for any large administrative dataset: HMDA mortgage data, Medicare claims, patent filings, trade transaction records, Census microdata.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">The new default</span>
+        <p>There is no excuse anymore for the flat-CSV-with-copies workflow. The tools are free, and Claude knows how to use them.</p>
+      </aside>
+
+      <h2>Parquet: Better Storage</h2>
+
+      <p>Parquet stores data column by column instead of row by row. One consequence: it compresses dramatically. In one project, 70 GB of raw CSVs became about 6 GB of parquet files, roughly 15x smaller. Another consequence: DuckDB can read just the columns it needs without loading the full file into memory. If you want the mean of one variable across 200 million rows, it reads that one column. Your laptop handles it fine.</p>
+
+      <div class="code-block">
+        <div class="code-header">Your message</div>
+        <pre><code>/prompt Convert all the CSVs in data/raw/ to parquet files.
+Save them in data/parquet/.</code></pre>
+      </div>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">You do not need to understand the internals</span>
+        <p>Just know: parquet is smaller, faster, and Claude knows how to use it. You will never need to open a parquet file in a text editor. You interact with it through DuckDB or through Claude.</p>
+      </aside>
+
+      <h2>DuckDB: Your Research Database</h2>
+
+      <p>DuckDB is like SQLite: a single <code>.duckdb</code> file, zero configuration, no server, no database administrator. But it handles hundreds of millions of rows on a laptop. You describe what you want in English, Claude translates to SQL, DuckDB runs it in seconds. You never write SQL yourself unless you want to.</p>
+
+      <div class="code-block">
+        <div class="code-header">Your message</div>
+        <pre><code>/prompt Build a DuckDB database from the parquet files in data/parquet/.
+Then create a county-by-year aggregate table with:
+- total loan originations
+- total dollar volume
+- number of active lenders
+- denial rate
+- median loan amount</code></pre>
+      </div>
+
+      <p>One SQL query, 291 million rows, a few seconds. The database is a single file you can hand to a coauthor.</p>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">The old way</span>
+          <p>"I have CSVs everywhere. Let me load them one year at a time in Stata, save intermediate files, and hope I remember which version is current."</p>
+        </div>
+        <div class="good">
+          <span class="label">The new way</span>
+          <p>"Build a DuckDB database from these parquet files. Include a metadata table that documents every column."</p>
+        </div>
+      </div>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Querying your database</span>
+        <p>You can query a DuckDB database directly from the command line (<code>duckdb mydata.db</code>) or let Claude query it for you. Either way, results come back in seconds, even on hundreds of millions of rows.</p>
+      </aside>
+
+      <h2>Metadata Tables: Context Engineering for Data</h2>
+
+      <p>When your data is too big to browse, put the documentation <em>inside the database itself</em>. A metadata table records the name, type, description, valid values, and year availability for every column:</p>
+
+      <div class="code-block">
+        <div class="code-header">SQL query</div>
+        <pre><code>SELECT * FROM metadata WHERE column_name = 'action_taken';
+
+-- Returns:
+-- column: action_taken
+-- type: integer
+-- description: Loan application outcome
+-- values: 1=originated, 2=approved not accepted,
+--         3=denied, 4=withdrawn, 5=file closed
+-- available_years: 2007-2024</code></pre>
+      </div>
+
+      <p>Next time you, a coauthor, or Claude in a new session opens this database, <code>SELECT * FROM metadata</code> explains everything. No one calls you to ask what <code>action_taken = 3</code> means. Claude can write correct queries without ever scanning the raw data. The data documents itself.</p>
+
+      <p>You would probably never build this by hand. The payoff is downstream and the cost is now, so it never happens. With Claude, the cost is basically zero: describe what you want documented and it writes the metadata for you.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Cheap insurance</span>
+        <p>A dataset without documentation is a dataset you will misuse eventually. Metadata tables are cheap insurance. Let Claude build them.</p>
+      </aside>
+
+      <h2>The Pipeline Pattern</h2>
+
+      <p>Every large-data project follows the same five-step pattern:</p>
+
+      <div class="workflow-diagram">
+        <div class="workflow-step">1. Download (with resume capability)</div>
+        <div class="workflow-arrow">&darr;</div>
+        <div class="workflow-step">2. Convert CSV to parquet</div>
+        <div class="workflow-arrow">&darr;</div>
+        <div class="workflow-step">3. Harmonize formats and eras</div>
+        <div class="workflow-arrow">&darr;</div>
+        <div class="workflow-step">4. Document with metadata table</div>
+        <div class="workflow-arrow">&darr;</div>
+        <div class="workflow-step">5. Query and analyze</div>
+      </div>
+
+      <p>Ask Claude to build this as a set of scripts, not as inline commands. The scripts are the reproducible artifact. Here is what a well-organized project looks like:</p>
+
+      <div class="code-block">
+        <div class="code-header">Project structure</div>
+        <pre><code>project/
+├── data/
+│   ├── raw/              (original CSVs)
+│   ├── parquet/          (converted, compressed)
+│   └── database.duckdb   (queryable database)
+├── code/
+│   ├── download.py
+│   ├── convert.py
+│   ├── harmonize.py
+│   └── analyze.py
+└── figures/</code></pre>
+      </div>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Resume capability</span>
+        <p>Always ask Claude to build in resume capability. Downloads fail, APIs time out, rate limits hit. Caching means re-running only processes what is missing, instead of starting from scratch.</p>
+      </aside>
+
+      <p>One thing to watch for in complex pipeline tasks: Claude may spawn sub-agents for research or exploration. These sub-agents do not always inherit all your constraints. If you told Claude "do not look in the parent directory" but it delegates exploration to a sub-agent, that instruction may be lost. Re-state important constraints if you notice Claude exploring places it should not.</p>
+
+      <h2>Verification for Large Data</h2>
+
+      <p>You cannot eyeball millions of rows. Verification at scale looks different.</p>
+
+      <p><strong>Sanity checks:</strong> Ask Claude basic questions after building the database. Do the top counties, firms, or categories match expectations? Does the time series show known patterns (the 2008 crisis, the COVID spike, seasonal variation)? If Los Angeles is not in the top 5 counties for mortgage volume, something broke.</p>
+
+      <p><strong>Quality reports:</strong> Ask Claude for a quality report: how many files parsed successfully, distributions of key variables, suspiciously short or empty extractions. These catch problems that sanity checks miss.</p>
+
+      <p><strong>The 95/5 pattern:</strong> Automated pipelines get you 95% of the way; the last 5% requires judgment. In one project, a parser extracted the target section from 119 out of 120 filings. The holdout had an unusual formatting quirk. For a quick analysis, 119 out of 120 is fine. For a published paper, you go back and fix it. Either way, the pipeline did the bulk of the work.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Silent harmonization</span>
+        <p>Claude will silently harmonize things that should not be harmonized. When merging datasets with different coding schemes (a variable means one thing pre-2018 and something else post-2018), always ask Claude to surface discrepancies rather than resolve them automatically. You want to see the mismatches before deciding how to handle them.</p>
+      </aside>
+
+      <h2>Try It: CSV to Parquet to DuckDB</h2>
+
+      <p>Try the entire pattern right now with the same <code>data/examples/UNRATE.csv</code> from the <a href="core-workflow.html">Core Workflow</a> page. The file is tiny, but the workflow is identical at any scale.</p>
+
+      <p><strong>Step 1:</strong> Ask Claude:</p>
+
+      <div class="code-block">
+        <div class="code-header">Your message</div>
+        <pre><code>/prompt Convert data/examples/UNRATE.csv to a parquet file.
+Then create a DuckDB database from it with a metadata table
+that documents every column: name, type, description, and value range.</code></pre>
+      </div>
+
+      <p><strong>Step 2:</strong> Claude produces a <code>.parquet</code> file (smaller than the CSV) and a <code>.duckdb</code> file. Check the metadata:</p>
+
+      <div class="code-block">
+        <div class="code-header">Your message</div>
+        <pre><code>/prompt Show me the metadata table. Then compute the average
+unemployment rate by decade.</code></pre>
+      </div>
+
+      <p><strong>Step 3:</strong> Check the results. You now have a self-documenting, queryable dataset from a plain CSV. Under two minutes, start to finish.</p>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Same pattern, any scale</span>
+        <p>The workflow you just tried (CSV to parquet to DuckDB with metadata) is the same at 70 KB and at 70 GB. Only the time changes. Once you know the pattern, you can apply it to any dataset Claude Code can reach.</p>
+      </aside>
+
+      <nav class="page-nav">
+        <a href="async-workflows.html" class="prev">&larr; Async Workflows</a>
+      </nav>
+
+      <footer class="page-footer">
+        Last verified: May 2026
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
