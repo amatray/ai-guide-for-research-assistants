@@ -82,7 +82,7 @@
 
       <aside class="callout callout-tip">
         <span class="callout-label">Syncing across machines</span>
-        <p>If you work on multiple computers and want the same skills and profile everywhere, use GitHub. Push your <code>~/.claude/commands/</code> folder and <code>CLAUDE.md</code> to a repository, clone it on each machine, and create symlinks back to <code>~/.claude/</code>. For example: <code>ln -s ~/my-claude-config/commands ~/.claude/commands</code>. This gives you version-controlled sync without breaking the path Claude Code expects. Adrien can help you set this up.</p>
+        <p>If you work on multiple computers and want the same skills and profile everywhere, use GitHub. Push your <code>~/.claude/skills/</code> folder and <code>CLAUDE.md</code> to a repository, clone it on each machine, and create symlinks back to <code>~/.claude/</code>. For example: <code>ln -s ~/my-claude-config/skills ~/.claude/skills</code>. This gives you version-controlled sync without breaking the path Claude Code expects. Adrien can help you set this up.</p>
       </aside>
 
       <h3>1. CLAUDE.md: your profile and rules</h3>
@@ -149,28 +149,12 @@ My files are on Dropbox at ~/Dropbox/research/.
 
       <h3>2. Skills: reusable commands</h3>
 
-      <p>A skill (also called a custom command) is a reusable prompt you can invoke with a slash command. If you find yourself giving Claude the same multi-step instruction repeatedly, turn it into a skill.</p>
+      <p>A skill is a reusable prompt you can invoke with a slash command. If you find yourself giving Claude the same multi-step instruction repeatedly, turn it into a skill.</p>
 
-      <p>Skills are markdown files stored in <code>~/.claude/commands/</code>. The filename becomes the command name. For example, <code>check-merge.md</code> becomes <code>/check-merge</code>.</p>
-
-      <div class="code-block">
-        <div class="code-header">~/.claude/commands/check-merge.md</div>
-        <pre><code>Review the most recent merge in the current Stata do-file.
-Check:
-1. Are the merge keys correct? (Compare against the actual variable names in both datasets.)
-2. How many observations matched vs. unmatched? (Run a tabulation of _merge.)
-3. Did the merge change the number of observations unexpectedly?
-4. Are there duplicate keys that could cause a many-to-many merge?
-
-Report findings and flag anything suspicious.</code></pre>
-      </div>
-
-      <p>Now whenever you type <code>/check-merge</code> in Claude Code, it runs this entire review automatically.</p>
-
-      <p>One caveat: skills need to follow a specific format to work reliably. Every skill file must start with a YAML frontmatter block that tells Claude Code the skill's name, description, and what tools it can use. Here is what that looks like:</p>
+      <p>Skills live in <code>~/.claude/skills/</code>. Each skill is a <em>directory</em> containing a file called <code>SKILL.md</code>. The directory name becomes the command name. For example, <code>~/.claude/skills/check-merge/SKILL.md</code> becomes <code>/check-merge</code>.</p>
 
       <div class="code-block">
-        <div class="code-header">Skill format (required header)</div>
+        <div class="code-header">~/.claude/skills/check-merge/SKILL.md</div>
         <pre><code>---
 name: check-merge
 description: Review the most recent merge in a Stata do-file for correctness.
@@ -178,16 +162,29 @@ argument-hint: "[path to do-file]"
 allowed-tools: ["Read", "Bash", "Grep"]
 ---
 
-Your skill instructions go here.
-Use $ARGUMENTS to capture what the user types after the command.
-Use @path/to/file.md to include shared reference files.</code></pre>
+Review the most recent merge in the current Stata do-file.
+Check:
+1. Are the merge keys correct? (Compare against the actual variable names in both datasets.)
+2. How many observations matched vs. unmatched? (Run a tabulation of _merge.)
+3. Did the merge change the number of observations unexpectedly?
+4. Are there duplicate keys that could cause a many-to-many merge?
+
+Report findings and flag anything suspicious.
+Use $ARGUMENTS to capture what the user types after the command.</code></pre>
       </div>
 
-      <p>Without this header, the skill will still run, but Claude Code will not know what tools to allow, will not display helpful hints, and may not behave as expected. Many skill examples you find online skip this header entirely. They will silently underperform or break.</p>
+      <p>Now whenever you type <code>/check-merge</code> in Claude Code, it runs this entire review automatically. Claude also sees the skill's description and can invoke it proactively when relevant (for example, automatically running a merge check after you ask it to merge two datasets).</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Directory format required</span>
+        <p>Each skill must be a directory containing <code>SKILL.md</code>. A flat file like <code>~/.claude/skills/check-merge.md</code> will be silently ignored. This is the single most common reason skills fail to load after installation.</p>
+      </aside>
+
+      <p>The YAML frontmatter block at the top is important. The <code>description</code> field tells Claude what the skill does (enabling auto-invocation), <code>argument-hint</code> shows usage hints, and <code>allowed-tools</code> controls what tools the skill can use. Without this header, the skill may not behave as expected.</p>
 
       <aside class="callout callout-tip">
         <span class="callout-label">Always use /skill-creator</span>
-        <p>When you want to create a new skill, do not write the file yourself. Use the <code>/skill-creator</code> command instead. Describe what you want the skill to do, and it will generate a properly formatted skill file for you. This is the safe default. It gets the structure right so you do not have to learn it.</p>
+        <p>When you want to create a new skill, do not write the file yourself. Use the <code>/skill-creator</code> command instead. Describe what you want the skill to do, and it will generate a properly formatted skill directory for you. This is the safe default. It gets the structure right so you do not have to learn it.</p>
       </aside>
 
       <h3>3. Settings: permissions and connections</h3>
@@ -252,11 +249,11 @@ After any regression, confirm the number of observations and FE used.</code></pr
         <p>Every time you create or update a project CLAUDE.md, open a fresh conversation and ask: <code>Read my global CLAUDE.md at ~/.claude/CLAUDE.md and compare it against this project's CLAUDE.md. Flag any rules that contradict or could override my global preferences.</code> This takes ten seconds and catches problems before they cause silent errors in your output.</p>
       </aside>
 
-      <p>Projects can also have their own skills in <code>.claude/commands/</code> within the project folder. These only appear when you are working in that project.</p>
+      <p>Projects can also have their own skills in <code>.claude/skills/</code> within the project folder. These only appear when you are working in that project.</p>
 
       <h2 id="team-skills">Team Skills</h2>
 
-      <p>Some skills are shared across the team. These are maintained by Adrien and live in a shared repository. During onboarding, you will get access to the team skills and instructions on how to install them.</p>
+      <p>Some skills are shared across the team. These are maintained by Adrien and live in a shared GitHub repository.</p>
 
       <p>Key team skills you will use:</p>
 
@@ -270,11 +267,29 @@ After any regression, confirm the number of observations and FE used.</code></pr
 
       <p>For the complete list of available skills, see the <a href="https://github.com/amatray/claude-skills-public">skill library on GitHub</a>.</p>
 
-      <p>These are <em>custom</em> skills, not built-in Claude Code commands. They will not work until installed. Adrien will set this up with you during your first week.</p>
+      <h3>Installing team skills</h3>
+
+      <div class="code-block">
+        <div class="code-header">Terminal (run once)</div>
+        <pre><code># 1. Clone the skills repo
+git clone https://github.com/amatray/claude-skills-public ~/claude-skills
+
+# 2. Symlink into Claude Code
+ln -s ~/claude-skills/skills ~/.claude/skills
+
+# 3. Restart Claude Code
+
+# 4. Verify: type / and confirm skills like /prompt and /audit-code appear</code></pre>
+      </div>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Common mistake: flat files in skills/</span>
+        <p>If you copy <code>.md</code> files directly into <code>~/.claude/skills/</code> without the directory structure, nothing will load. Each skill must be a directory containing <code>SKILL.md</code>. The repo is already structured correctly; just symlink and you are done.</p>
+      </aside>
 
       <aside class="callout callout-tip">
         <span class="callout-label">Built-in vs. custom</span>
-        <p>Commands like <code>/plan</code>, <code>/clear</code>, and <code>/compact</code> are built into Claude Code and work out of the box. Commands like <code>/review-plan</code> and <code>/audit-code</code> are team skills that require setup. If a slash command does not work, check whether it is a custom skill that needs to be installed.</p>
+        <p>Commands like <code>/plan</code>, <code>/clear</code>, and <code>/compact</code> are built into Claude Code and work out of the box. Commands like <code>/review-plan</code> and <code>/audit-code</code> are team skills that require the installation above. If a slash command does not work, check whether it is a custom skill that needs to be installed.</p>
       </aside>
 
       <aside class="callout callout-tip">

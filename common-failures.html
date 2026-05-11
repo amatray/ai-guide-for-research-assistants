@@ -148,6 +148,29 @@ regress log_revenue trade_exposure i.year, cluster(firm_id)
         <p>When Claude suggests a methodological choice, ask yourself: "Would I make this same choice if I were doing this manually?" If you are not sure, ask Adrien before proceeding. Claude is not a substitute for econometric judgment.</p>
       </aside>
 
+      <h2>Skills Not Loading</h2>
+
+      <p>You installed skills from the team repository, but when you type <code>/</code> nothing shows up. Claude does not recognize any of the custom commands. This is almost always a directory structure problem.</p>
+
+      <p>Claude Code's <code>~/.claude/skills/</code> directory requires each skill to be a <em>directory</em> containing a file called <code>SKILL.md</code>. If you put flat <code>.md</code> files directly in <code>~/.claude/skills/</code>, they are silently ignored. No error, no warning, just nothing loads.</p>
+
+      <div class="comparison-grid">
+        <div class="bad">
+          <span class="label">Will not load</span>
+          <p><code>~/.claude/skills/prompt.md</code></p>
+          <p><code>~/.claude/skills/audit-code.md</code></p>
+        </div>
+        <div class="good">
+          <span class="label">Correct structure</span>
+          <p><code>~/.claude/skills/prompt/SKILL.md</code></p>
+          <p><code>~/.claude/skills/audit-code/SKILL.md</code></p>
+        </div>
+      </div>
+
+      <p>If you followed the installation instructions on the <a href="making-it-yours.html#team-skills">Making It Yours</a> page (clone + symlink), the structure is correct automatically. If you copied files manually, check the directory layout.</p>
+
+      <p>Another common cause: you need to restart Claude Code after creating new skill directories. Edits to existing skills are picked up live, but brand-new directories are only detected on session start.</p>
+
       <h2>Configuration Bloat</h2>
 
       <p>Remember the mental model: Claude is an over-eager, overconfident collaborator. When you hand it a 10-page briefing document, it does exactly what a rushed human assistant would do. It skims. It reads the first few sections carefully, then starts skipping over details buried deeper in the file. It will never tell you "this file is too long for me to follow reliably." It just quietly stops following some of your rules.</p>
