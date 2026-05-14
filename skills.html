@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills - Claude Code for RAs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
+</head>
+<body>
+  <details class="mobile-nav">
+    <summary>Claude Code for RAs - Menu</summary>
+    <ul class="nav-links">
+      <li><a href="index.html">Philosophy</a></li>
+      <li><a href="getting-started.html">Getting Started</a></li>
+      <li><a href="core-workflow.html">Core Workflow</a></li>
+      <li><a href="making-it-yours.html">Making It Yours</a></li>
+      <li><a href="skills.html" class="nav-active">Skills</a></li>
+      <li><a href="common-failures.html">Common Failures</a></li>
+      <li><a href="async-workflows.html">Async Workflows</a></li>
+      <li><a href="large-datasets.html">Large Datasets</a></li>
+    </ul>
+  </details>
+
+  <div class="page-wrapper">
+    <nav class="site-nav">
+      <div class="nav-brand">
+        <span class="nav-title">Claude Code for RAs</span>
+        <span class="nav-subtitle">A Guide by Adrien Matray</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Philosophy</a></li>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="core-workflow.html">Core Workflow</a></li>
+        <li><a href="making-it-yours.html">Making It Yours</a></li>
+        <li><a href="skills.html" class="nav-active">Skills</a></li>
+        <li><a href="common-failures.html">Common Failures</a></li>
+        <li><a href="async-workflows.html">Async Workflows</a></li>
+        <li><a href="large-datasets.html">Large Datasets</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1>Skills</h1>
+
+      <p>The team skills are published at <a href="https://github.com/amatray/claude-skills-public">github.com/amatray/claude-skills-public</a>. See <a href="making-it-yours.html#team-skills">Making It Yours</a> for installation. This page is a reference list of what each one does.</p>
+
+      <p>Type the slash command in Claude Code to invoke a skill. Most skills also auto-trigger when their description matches what you are doing, but you can always invoke them explicitly.</p>
+
+      <h2>Paper review and feedback</h2>
+
+      <p>For working on your own papers and other people's papers, before submission and before passing them on.</p>
+
+      <ul>
+        <li><code>/audit-paper</code>: full audit of an academic paper (typos, grammar, prose quality, apparatus, structural coherence, AI-pattern detection). Module-by-module, with track-changes markup by default.</li>
+        <li><code>/simulate-referee</code>: simulated peer review with an Editor and two Referees, calibrated to journal expectations. Useful for pre-submission feedback when you cannot get a real reading.</li>
+        <li><code>/lit-review-verify</code>: citation accuracy checker. Reads a <code>.tex</code> or <code>.md</code> file, extracts each claim-citation pair, and verifies whether the cited paper actually supports the claim.</li>
+      </ul>
+
+      <h2>Code and models</h2>
+
+      <p>For empirical and theoretical work.</p>
+
+      <ul>
+        <li><code>/audit-code</code>: systematic audit of Stata do-files for macro definitions, paths, code consistency, and unused variables.</li>
+        <li><code>/solving-model</code>: structured workflow for setting up, solving, and verifying an economic model with step-by-step derivations and cross-model mathematical checking.</li>
+      </ul>
+
+      <h2>LaTeX and documents</h2>
+
+      <p>For the apparatus around papers, slides, and reading.</p>
+
+      <ul>
+        <li><code>/compile-latex</code>: compiles a LaTeX document using the <code>xelatex</code> &rarr; <code>bibtex</code> &rarr; <code>xelatex</code> &rarr; <code>xelatex</code> pipeline, fixing errors and re-compiling until it builds cleanly.</li>
+        <li><code>/overleaf</code>: syncs a local Overleaf clone via Git. Pull, push, or full sync.</li>
+        <li><code>/pdf-chunker</code>: reliable chunked extraction from PDF files. Mandatory for any task involving reading or analyzing a PDF (replaces Claude's default PDF reader, which silently truncates).</li>
+      </ul>
+
+      <h2>General-purpose helpers</h2>
+
+      <p>For everything else: planning, prompting, and building your own skills.</p>
+
+      <ul>
+        <li><code>/prompt</code>: reformats a rough, dictated request into a structured prompt and then executes it. Useful with voice dictation.</li>
+        <li><code>/prompt-only</code>: same as <code>/prompt</code> but produces the formatted prompt without executing. For pasting into another tool.</li>
+        <li><code>/review-plan</code>: stress-tests a plan with structured expert critique, best-practice research, and an optional fresh-context subagent review. Use after writing any plan to catch blind spots.</li>
+        <li><code>/skill-creator</code>: creates new skills, modifies existing ones, and runs evaluations to measure skill performance. Always use this rather than writing skill files by hand.</li>
+      </ul>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">When to use which</span>
+        <p>The descriptions in each skill's frontmatter tell Claude when the skill is relevant, so most of the time the right one will be invoked automatically. If you are unsure, ask Claude: "Which skill should I use for this task?"</p>
+      </aside>
+
+      <h2>Beyond this list</h2>
+
+      <p>Other economists publish their own skill libraries. <a href="https://github.com/scunning1975/MixtapeTools">Scott Cunningham's MixtapeTools</a> is a good place to browse: skills for refereeing, splitting PDFs, building decks, and more. Install the ones that fit, ignore the rest.</p>
+
+      <p>To create your own skill, use <code>/skill-creator</code> rather than writing the markdown file by hand. See <a href="making-it-yours.html">Making It Yours</a> for the directory format and frontmatter requirements.</p>
+
+      <nav class="page-nav">
+        <a href="making-it-yours.html" class="prev">&larr; Making It Yours</a>
+        <a href="common-failures.html" class="next">Common Failures &rarr;</a>
+      </nav>
+
+      <footer class="page-footer">
+        Last verified: May 2026
+      </footer>
+    </main>
+  </div>
+</body>
+</html>
