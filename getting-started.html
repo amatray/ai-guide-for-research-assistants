@@ -153,6 +153,7 @@ claude</code></pre>
       <ul>
         <li><code>/clear</code>: resets the conversation. Claude forgets everything from this session.</li>
         <li><code>/compact</code>: compresses the conversation into a summary, freeing up context space without fully resetting.</li>
+        <li><code>/context</code>: shows how much of the context window you have used so far.</li>
         <li>Starting a new terminal session gives you a completely fresh start.</li>
       </ul>
 
@@ -164,6 +165,11 @@ claude</code></pre>
       <aside class="callout callout-tip">
         <span class="callout-label">The handoff trick</span>
         <p>Before clearing, ask: "Write a short markdown summary of where we are, what was done, and what is left." Save it, then paste it into your next conversation. Zero context loss, fresh context window.</p>
+      </aside>
+
+      <aside class="callout callout-tip">
+        <span class="callout-label">Convert PDFs once</span>
+        <p>Every time Claude reads a PDF, it pays the parsing cost in tokens. If you will reference the same PDF more than once, convert it to markdown the first time and commit the markdown alongside the original. Claude reads the markdown from then on. The <code>/pdf-chunker</code> skill handles the conversion.</p>
       </aside>
 
       <p>You do not always need to do this manually. Claude Code has memory across sessions: it can recall prior conversations, remember decisions you made, and pick up context from previous work. If you start a new conversation and say "we were working on the merge script yesterday," it will often know what you mean. The handoff trick is your safety net for when you need a clean, reliable transfer. But in practice, Claude Code is better at continuity than you might expect.</p>
