@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Common Failures - Claude Code for RAs</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F4BB;</text></svg>">
 </head>
@@ -44,7 +41,9 @@
     </nav>
 
     <main class="content">
+      <div class="kicker">Chapter 5 &middot; Pitfalls</div>
       <h1>Common Failures</h1>
+      <p class="subtitle">Where things break, and how to spot them before they ship.</p>
 
       <p>AI fails in predictable ways. Once you learn the patterns, you catch them faster. This page is a taxonomy of how things go wrong and what to do about it.</p>
 
@@ -318,8 +317,9 @@ regress log_revenue trade_exposure i.year, cluster(firm_id)
         <a href="async-workflows.html" class="next">Async Workflows &rarr;</a>
       </nav>
 
-      <footer class="page-footer">
-        Last verified: May 2026
+      <footer class="footer-meta">
+        <span>Claude Code for RAs &middot; Common Failures</span>
+        <span>Adrien Matray &middot; Last verified May 2026</span>
       </footer>
     </main>
   </div>
