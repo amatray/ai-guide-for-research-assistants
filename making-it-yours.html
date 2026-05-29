@@ -242,6 +242,22 @@ After any regression, confirm the number of observations and FE used.</code></pr
 
       <h2 id="github-dropbox">GitHub and Dropbox for Economists</h2>
 
+      <p>The most common GitHub and Dropbox confusion is that Dropbox shows the files from the branch a local Git folder is currently on. It does not show "your branch" as a separate concept. It shows the actual files sitting in that folder at that moment.</p>
+
+      <p>Suppose a coauthor creates a sandbox branch, changes a do-file, and checks out that branch in a Dropbox-synced folder. The code you see in that Dropbox folder is now the code from the coauthor's sandbox branch. It can look like the shared project code, or like your own working copy, even though the folder is actually on a different branch.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">The source of confusion</span>
+        <p>Dropbox syncs files. Git decides which branch those files come from. If the folder is on the wrong branch, Dropbox faithfully shows the wrong branch's files.</p>
+      </aside>
+
+      <p>This is why you must never infer the Git state from what the Dropbox folder looks like. Before editing, always ask: what branch is this folder actually on?</p>
+
+      <div class="code-block">
+        <div class="code-header">Terminal</div>
+        <pre><code>git status --short --branch</code></pre>
+      </div>
+
       <p>For research projects, GitHub and Dropbox solve different problems. Dropbox stores files and syncs them across machines. GitHub records the meaning of code states: which branch is production, which branch is experimental, who changed what, and what was reviewed before it became part of the project.</p>
 
       <aside class="callout callout-philosophy">
@@ -274,12 +290,7 @@ After any regression, confirm the number of observations and FE used.</code></pr
     # Personal sandbox for trying changes.</code></pre>
       </div>
 
-      <p>The folder name is not decoration. It makes the intended branch visible in Dropbox, where Git branch state is otherwise hidden inside the <code>.git/</code> folder. Still, always verify the actual branch before working:</p>
-
-      <div class="code-block">
-        <div class="code-header">Terminal</div>
-        <pre><code>git status --short --branch</code></pre>
-      </div>
+      <p>The folder name is not decoration. It makes the intended branch visible in Dropbox, where Git branch state is otherwise hidden inside the <code>.git/</code> folder. Still, the folder name is only a label. The actual branch is what <code>git status --short --branch</code> reports.</p>
 
       <aside class="callout callout-warning">
         <span class="callout-label">Do not use one code folder for every branch</span>
