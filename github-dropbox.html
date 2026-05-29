@@ -75,6 +75,8 @@
 
       <p>The practical setup is simple: keep the project data in Dropbox, and put separate Git clones inside the Dropbox project folder when you need synced local code folders. Each clone is still a normal GitHub repository. Dropbox is only helping your laptop sync the folder.</p>
 
+      <p>The key point is that a real project usually needs one shared experimentation clone plus one sandbox clone per person. With two coauthors, you have two sandbox folders. With <code>n</code> coauthors, you have <code>n</code> sandbox folders. Each sandbox folder is checked out on that person's Git branch.</p>
+
       <div class="code-block">
         <div class="code-header">Dropbox project layout</div>
         <pre><code>Dropbox/project_name/
@@ -93,7 +95,15 @@
 
   code_experimentation_main_adrienSandbox/
     # Git clone on adrien/experimentation-sandbox
-    # Personal sandbox for trying changes.</code></pre>
+    # Adrien's sandbox for trying changes.
+
+  code_experimentation_main_rafaelSandbox/
+    # Git clone on rafael/experimentation-sandbox
+    # Rafael's sandbox for trying changes.
+
+  code_experimentation_main_[NAME]Sandbox/
+    # Git clone on [name]/experimentation-sandbox
+    # Repeat once per coauthor who needs a sandbox.</code></pre>
       </div>
 
       <p>The folder name is not decoration. It makes the intended branch visible in Dropbox, where Git branch state is otherwise hidden inside the <code>.git/</code> folder. Still, the folder name is only a label. The actual branch is what <code>git status --short --branch</code> reports.</p>
