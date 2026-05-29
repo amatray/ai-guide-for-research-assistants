@@ -75,7 +75,16 @@
 
       <p>The practical setup is simple: keep the project data in Dropbox, and put separate Git clones inside the Dropbox project folder when you need synced local code folders. Each clone is still a normal GitHub repository. Dropbox is only helping your laptop sync the folder.</p>
 
-      <p>The key point is that a real project usually needs one shared experimentation clone plus one sandbox clone per person. With two coauthors, you have two sandbox folders. With <code>n</code> coauthors, you have <code>n</code> sandbox folders. Each sandbox folder is checked out on that person's Git branch.</p>
+      <p>The reason for multiple code folders is that a Git folder can only show one branch at a time. If two coauthors share one folder called <code>code_experimentation_main/</code> and each person checks out their own branch, the visible files keep changing depending on the last branch checkout. The folder then stops answering the basic question: whose code am I looking at?</p>
+
+      <p>The shared experimentation clone has a different job from the sandbox clones. <code>code_experimentation_main/</code> is the common baseline that everyone branches from and eventually merges back into. It should stay clean, readable, and close to what the team currently agrees is the active working version.</p>
+
+      <p>Each sandbox clone is where one person experiments without changing what everyone else sees. With two coauthors, you have two sandbox folders. With <code>n</code> coauthors, you have <code>n</code> sandbox folders. Each sandbox folder is checked out on that person's Git branch, so the folder name, the branch name, and the human owner all point to the same thing.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Why one sandbox per author</span>
+        <p>One folder should have one meaning. A shared baseline folder means "team version." A sandbox folder means "this person's experiment." Mixing those meanings in one Dropbox folder is what creates confusion.</p>
+      </aside>
 
       <div class="code-block">
         <div class="code-header">Dropbox project layout</div>
