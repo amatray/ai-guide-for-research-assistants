@@ -15,6 +15,7 @@
       <li><a href="getting-started.html">Getting Started</a></li>
       <li><a href="core-workflow.html">Core Workflow</a></li>
       <li><a href="making-it-yours.html" class="nav-active">Making It Yours</a></li>
+      <li><a href="github-dropbox.html">GitHub &amp; Dropbox</a></li>
       <li><a href="skills.html">Skills</a></li>
       <li><a href="common-failures.html">Common Failures</a></li>
       <li><a href="async-workflows.html">Async Workflows</a></li>
@@ -33,6 +34,7 @@
         <li><a href="getting-started.html">Getting Started</a></li>
         <li><a href="core-workflow.html">Core Workflow</a></li>
         <li><a href="making-it-yours.html" class="nav-active">Making It Yours</a></li>
+        <li><a href="github-dropbox.html">GitHub &amp; Dropbox</a></li>
         <li><a href="skills.html">Skills</a></li>
         <li><a href="common-failures.html">Common Failures</a></li>
         <li><a href="async-workflows.html">Async Workflows</a></li>
@@ -52,7 +54,6 @@
         <ul>
           <li><a href="#global-layer">Global setup</a> (applies everywhere)</li>
           <li><a href="#project-layer">Project setup</a> (for this project)</li>
-          <li><a href="#github-dropbox">GitHub and Dropbox</a> (code, data, and collaboration)</li>
           <li><a href="#team-skills">Team skills and automation</a></li>
         </ul>
       </aside>
@@ -240,117 +241,10 @@ After any regression, confirm the number of observations and FE used.</code></pr
 
       <p>Notice what goes here and what does not. The project CLAUDE.md says "the ID variable is <code>firm_id</code>" because that is specific to this dataset. It does not say "use full country names in tables" because that is a universal rule that belongs in your global file. The project file answers: what are the files, what are the variables, what is off-limits, where are we in the work.</p>
 
-      <h2 id="github-dropbox">GitHub and Dropbox for Economists</h2>
-
-      <p>The most common GitHub and Dropbox confusion is that Dropbox shows the files from the branch a local Git folder is currently on. It does not show "your branch" as a separate concept. It shows the actual files sitting in that folder at that moment.</p>
-
-      <p>Suppose a coauthor creates a sandbox branch, changes a do-file, and checks out that branch in a Dropbox-synced folder. The code you see in that Dropbox folder is now the code from the coauthor's sandbox branch. It can look like the shared project code, or like your own working copy, even though the folder is actually on a different branch.</p>
-
-      <aside class="callout callout-warning">
-        <span class="callout-label">The source of confusion</span>
-        <p>Dropbox syncs files. Git decides which branch those files come from. If the folder is on the wrong branch, Dropbox faithfully shows the wrong branch's files.</p>
+      <aside class="callout callout-tip">
+        <span class="callout-label">Version control gets its own page</span>
+        <p>GitHub and Dropbox create a specific confusion for economists: Dropbox shows files from the branch a local Git folder is currently on. See <a href="github-dropbox.html">GitHub and Dropbox</a> for the full workflow, examples, and branch rules.</p>
       </aside>
-
-      <p>This is why you must never infer the Git state from what the Dropbox folder looks like. Before editing, always ask: what branch is this folder actually on?</p>
-
-      <div class="code-block">
-        <div class="code-header">Terminal</div>
-        <pre><code>git status --short --branch</code></pre>
-      </div>
-
-      <p>For research projects, GitHub and Dropbox solve different problems. Dropbox stores files and syncs them across machines. GitHub records the meaning of code states: which branch is production, which branch is experimental, who changed what, and what was reviewed before it became part of the project.</p>
-
-      <aside class="callout callout-philosophy">
-        <span class="callout-label">The mental model</span>
-        <p>Dropbox is the storage layer. GitHub is the collaboration layer. Dropbox can hold your local copies, but GitHub defines the shared code history.</p>
-      </aside>
-
-      <p>In economics projects, this distinction matters because code and data have different lives. Code, LaTeX files, small configuration files, and reproducible outputs belong in GitHub. Large datasets, proprietary data, raw extracts, and heavy intermediate files belong in Dropbox and should usually stay out of Git.</p>
-
-      <p>The practical setup is simple: keep the project data in Dropbox, and put separate Git clones inside the Dropbox project folder when you need synced local code folders. Each clone is still a normal GitHub repository. Dropbox is only helping your laptop sync the folder.</p>
-
-      <div class="code-block">
-        <div class="code-header">Dropbox project layout</div>
-        <pre><code>Dropbox/project_name/
-  data/
-    source/
-    temp/
-    output/
-
-  code_main/
-    # Git clone on main
-    # Production code that should reproduce the current paper.
-
-  code_experimentation_main/
-    # Git clone on experimentation_main
-    # Shared baseline for a research phase.
-
-  code_experimentation_main_adrienSandbox/
-    # Git clone on adrien/experimentation-sandbox
-    # Personal sandbox for trying changes.</code></pre>
-      </div>
-
-      <p>The folder name is not decoration. It makes the intended branch visible in Dropbox, where Git branch state is otherwise hidden inside the <code>.git/</code> folder. Still, the folder name is only a label. The actual branch is what <code>git status --short --branch</code> reports.</p>
-
-      <aside class="callout callout-warning">
-        <span class="callout-label">Do not use one code folder for every branch</span>
-        <p>A single folder called <code>code/</code> becomes ambiguous when it is switched across long-lived branches. It may look like production code in Dropbox while actually sitting on a sandbox branch. For long-lived work, use separate folders whose names state the intended branch.</p>
-      </aside>
-
-      <h3>The branch model</h3>
-
-      <p>Use <code>main</code> for production code. It should reproduce the latest paper, slides, and core results from beginning to end. Do not commit directly to <code>main</code>; use a branch and a pull request.</p>
-
-      <p>For a major phase, create a shared working branch such as <code>experimentation_main</code> or <code>revision_r1_main</code>. This becomes the team's active baseline while <code>main</code> stays stable. Individual sandboxes branch from that shared working branch, not from <code>main</code>.</p>
-
-      <div class="code-block">
-        <div class="code-header">Branch structure</div>
-        <pre><code>main
-  Production branch.
-
-experimentation_main
-  Shared working branch for the current phase.
-
-adrien/experimentation-sandbox
-  Personal experiment created from experimentation_main.
-
-name/experimentation-sandbox
-  Another collaborator's personal experiment.</code></pre>
-      </div>
-
-      <h3>What to ask Claude Code</h3>
-
-      <p>You do not need to memorize Git commands to work correctly. Ask Claude Code to set up the folder and branch structure, then make it verify the branch before editing.</p>
-
-      <div class="code-block">
-        <div class="code-header">Start a shared experimentation phase</div>
-        <pre><code>Please create a separate Dropbox code folder called code_experimentation_main/.
-It should be a clone of the same GitHub repository, checked out on a shared
-branch called experimentation_main.
-
-If experimentation_main does not exist yet, create it from main, push it to
-GitHub, and verify that the local folder tracks the GitHub branch.</code></pre>
-      </div>
-
-      <div class="code-block">
-        <div class="code-header">Work in a personal sandbox</div>
-        <pre><code>Please work in code_experimentation_main_[NAME]Sandbox/.
-First verify which Git branch this folder is on. Then pull the latest version
-of the sandbox branch from GitHub.
-
-After making the code changes, show me the changed files, run the relevant
-checks, commit the changes to the sandbox branch, and push the branch to
-GitHub.</code></pre>
-      </div>
-
-      <h3>Rules that prevent painful mistakes</h3>
-
-      <ul>
-        <li><strong>Do not commit data files.</strong> Large <code>.dta</code> files, large <code>.csv</code> files, proprietary data, and raw extracts live in Dropbox, not GitHub.</li>
-        <li><strong>Do not force push.</strong> <code>git push --force</code> rewrites shared history. Treat it as off-limits unless Adrien explicitly approves it.</li>
-        <li><strong>Do not merge into production casually.</strong> Changes enter <code>main</code> through a pull request, after review and after the relevant pipeline has run.</li>
-        <li><strong>Always check the branch before editing.</strong> Folder names help, but <code>git status --short --branch</code> is the final check.</li>
-      </ul>
 
       <h3>A separate project-file problem</h3>
 
@@ -427,7 +321,7 @@ ln -s ~/claude-skills/skills ~/.claude/skills
 
       <nav class="page-nav">
         <a href="core-workflow.html" class="prev">&larr; Core Workflow</a>
-        <a href="skills.html" class="next">Skills &rarr;</a>
+        <a href="github-dropbox.html" class="next">GitHub &amp; Dropbox &rarr;</a>
       </nav>
 
       <footer class="footer-meta">
