@@ -196,7 +196,13 @@ Use $ARGUMENTS to capture what the user types after the command.</code></pre>
         <p>Each skill must be a directory containing <code>SKILL.md</code>. A flat file like <code>~/.claude/skills/check-merge.md</code> will be silently ignored. This is the single most common reason skills fail to load after installation.</p>
       </aside>
 
-      <p>The YAML frontmatter block at the top is important. The <code>description</code> field tells Claude what the skill does (enabling auto-invocation), <code>argument-hint</code> shows usage hints, and <code>allowed-tools</code> controls what tools the skill can use. Without this header, the skill may not behave as expected.</p>
+      <p>The block between the two <code>---</code> lines at the top is called the <em>YAML frontmatter</em>. It is metadata Claude reads before running the skill. Three fields matter:</p>
+      <ul>
+        <li><code>description</code>: what the skill does, in one sentence. Claude reads this to decide when to auto-invoke the skill, so be specific.</li>
+        <li><code>argument-hint</code>: despite the name, this is <em>not</em> a tip for Claude. It is the placeholder shown in the autocomplete UI that tells the user what argument the skill expects. In the example above, <code>[path to do-file]</code> means <code>/check-merge</code> needs the user to type a path to a do-file after the command. Think of it as the function signature, not a help string.</li>
+        <li><code>allowed-tools</code>: which Claude tools the skill is permitted to call.</li>
+      </ul>
+      <p>Without this header, the skill may not behave as expected.</p>
 
       <aside class="callout callout-tip">
         <span class="callout-label">Always use /skill-creator</span>
