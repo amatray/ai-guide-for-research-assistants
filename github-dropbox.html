@@ -47,9 +47,9 @@
       <h1>GitHub and Dropbox</h1>
       <p class="subtitle">How economists should keep code, data, branches, and coauthor work straight.</p>
 
-      <p>The most common GitHub and Dropbox confusion is that Dropbox shows the files from the branch a local Git folder is currently on. It does not show "your branch" as a separate concept. It shows the actual files sitting in that folder at that moment.</p>
+      <p>Here is the source of the confusion. A Git repository has exactly one "current branch" at any moment, and Git has no concept of multiple users. Git only knows "this folder is on branch X." When that folder is synced through Dropbox, every coauthor sees the same folder, which means every coauthor sees whatever branch happens to be checked out. There is no per-user view. There is one folder, one branch, and what is checked out is what everyone gets.</p>
 
-      <p>Suppose a coauthor creates a sandbox branch, modifies a do-file, and checks out that branch in a Dropbox-synced folder. The do-file you see in that Dropbox folder is now the version from the coauthor's sandbox branch. It can look like the shared project code, or like your own working copy, even though the folder is actually on a different branch.</p>
+      <p>Concrete example. A coauthor switches the folder from <code>main</code> to their sandbox branch <code>coauthor/experiment-X</code>, edits a do-file, and closes their editor without switching back. You open Dropbox the next morning. You see the do-file. You assume it is the team's <code>main</code> version. It is not. It is the version from <code>coauthor/experiment-X</code>, because the folder was left checked out on that branch when your coauthor stopped working.</p>
 
       <aside class="callout callout-warning">
         <span class="callout-label">The source of confusion</span>
