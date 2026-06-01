@@ -137,7 +137,9 @@
     # Repeat once per coauthor who needs a sandbox.</code></pre>
       </div>
 
-      <p>The folder name is not decoration. It makes the intended branch visible in Dropbox, where Git branch state is otherwise hidden inside the <code>.git/</code> folder. Still, the folder name is only a label. The actual branch is what <code>git status --short --branch</code> reports.</p>
+      <p>The folder name is not decoration. Git stores the current branch in the project's hidden <code>.git/</code> directory. That directory is inside Dropbox: it sits at the root of the project folder, not in your home directory like <code>~/.claude/</code>, so Dropbox syncs it along with the rest of the project. The branch state is there on disk, Dropbox simply does not surface it in its file browser UI. You therefore cannot tell from Dropbox alone what branch the folder is on, and the folder name is the workaround: it puts the intended branch in plain sight.</p>
+
+      <p>Still, the folder name is only a label. The actual branch is what <code>git status --short --branch</code> reports.</p>
 
       <aside class="callout callout-warning">
         <span class="callout-label">Do not use one code folder for every branch</span>
