@@ -47,6 +47,19 @@
       <h1>Making It Yours</h1>
       <p class="subtitle">CLAUDE.md, skills, and settings. The configuration layer that compounds over months.</p>
 
+      <aside class="callout callout-critical">
+        <span class="callout-label">Most common setup mistake</span>
+        <p>Has Claude been "getting dumb out of nowhere", forgetting your rules, or running Stata the wrong way? You probably moved <code>~/.claude/</code> to Dropbox.</p>
+        <p><strong>Where does my global CLAUDE.md need to live?</strong><br>
+        <code>~/.claude/CLAUDE.md</code>. Fixed path on your local machine. Nowhere else works.</p>
+        <p><strong>Can my project CLAUDE.md live on Dropbox?</strong><br>
+        Yes. The project file lives in the project folder, and the project folder can live anywhere, including Dropbox.</p>
+        <p><strong>It seems to work fine when I put <code>~/.claude/</code> in Dropbox. Why is this still wrong?</strong><br>
+        Because loading is intermittent, not broken. Sometimes Claude reads your generic preferences, sometimes it does not, and there is no error message. The symptom is silent quality drops you cannot trace: Claude suddenly forgets your rules, ignores your skills, or runs Stata the wrong way.</p>
+        <p><strong>How do I sync skills across machines without Dropbox?</strong><br>
+        Use GitHub plus symlinks. Push <code>~/.claude/</code> to a private repo, clone it on each machine, and symlink it back to the expected path. Details in <a href="#global-layer">The Global Layer</a> below.</p>
+      </aside>
+
       <p>This is where AI goes from "useful sometimes" to "indispensable." The difference between researchers who get real value from AI and those who find it "okay" is not the model. It is the configuration.</p>
 
       <aside class="callout callout-tip">

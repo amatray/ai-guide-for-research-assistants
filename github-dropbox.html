@@ -67,9 +67,24 @@
 
       <p>Dropbox is the storage layer. GitHub is the collaboration layer. Dropbox can hold your local copies, but GitHub defines the shared code history.</p>
 
+      <p>One assumption underlies everything here: economists usually share <strong>one</strong> Dropbox folder across all coauthors. Everyone sees every clone, and the data, directly on disk. This guide assumes that shared-Dropbox setup. GitHub is still how code is shared, reviewed, and given a history; the shared Dropbox just means you can also see each other's files directly.</p>
+
       <p>For research projects, GitHub and Dropbox solve different problems. Dropbox stores files and syncs them across machines. GitHub records the meaning of code states: which branch is production, which branch is experimental, who changed what, and what was reviewed before it became part of the project.</p>
 
       <p>In economics projects, this distinction matters because code and data have different lives. Code, LaTeX files, small configuration files, and reproducible outputs belong in GitHub. Large datasets, proprietary data, raw extracts, and heavy intermediate files belong in Dropbox and should usually stay out of Git.</p>
+
+      <h2>Saving Is Not Committing</h2>
+
+      <p>The deepest source of confusion is not branches, it is the difference between saving and committing. They are two independent systems layered on the same folder.</p>
+
+      <p>When you press Ctrl-S, you write the file to disk and Dropbox immediately backs it up across your machines. Git does nothing. Git only records a version when you deliberately run <code>git commit</code>. So Dropbox always holds your latest save, while Git holds only the snapshots you chose to take.</p>
+
+      <aside class="callout callout-philosophy">
+        <span class="callout-label">Two systems, two jobs</span>
+        <p>Ctrl-S feeds Dropbox: continuous, automatic, your personal backup across your own machines. Commit feeds Git: deliberate, snapshot-based, the reviewable history your coauthors see after you push. Saving 200 times creates zero commits.</p>
+      </aside>
+
+      <p>Two consequences follow. First, <strong>uncommitted does not mean lost.</strong> If you forget to commit and reopen your laptop, you see your saved code, not the old committed version. Git never silently reverts your files; your folder always holds your last save. Second, <strong>your coauthors see your work only after commit and push,</strong> never from Ctrl-S alone. In your own sandbox that is exactly what you want: half-finished experiments stay private until you choose to share them.</p>
 
       <h2>The Folder Layout</h2>
 
@@ -121,6 +136,19 @@
         <span class="callout-label">Do not use one code folder for every branch</span>
         <p>A single folder called <code>code/</code> becomes ambiguous when it is switched across long-lived branches. It may look like production code in Dropbox while actually sitting on a sandbox branch. For long-lived work, use separate folders whose names state the intended branch.</p>
       </aside>
+
+      <h2>Is Git in Dropbox Safe?</h2>
+
+      <p>Keeping Git clones inside a shared Dropbox folder raises a fair worry: Dropbox is also mirroring the hidden <code>.git/</code> database between machines. For the typical usage of economists, the risk is barely there, and the folder design is built to keep it that way.</p>
+
+      <p>The only way to corrupt a repository is for two machines to write the <strong>same</strong> <code>.git</code> at the same moment. Your sandbox is where you work most intensively, so naively that is where trouble would be most likely. That is exactly why each author gets their own sandbox clone: a sandbox is written by only one person on one machine, so the busiest folder is also single-writer and safe. The only residual risk sits on the <em>shared</em> clones, <code>code_main</code> and <code>code_experimentation_main</code>, which several people reach into but which you touch rarely.</p>
+
+      <aside class="callout callout-warning">
+        <span class="callout-label">Low risk, and recoverable</span>
+        <p>We only commit small text dofiles, a few times a day, so the window for two machines to clash on a shared clone is tiny. And if it ever happens, it is cheap to fix: the real history lives on GitHub, so you just re-clone. Push regularly and the worst case is two lost minutes.</p>
+      </aside>
+
+      <p>This is a <em>different</em> problem from "whose code am I looking at." Separate folders solve the branch-confusion problem. They do not, by themselves, stop Dropbox from mirroring <code>.git</code>. What protects you there is that sandboxes are single-writer, plus the one heads-up habit for shared clones below.</p>
 
       <h2>The Branch Model</h2>
 
@@ -178,6 +206,7 @@ GitHub.</code></pre>
         <li><strong>Do not force push.</strong> <code>git push --force</code> rewrites shared history. Treat it as off-limits unless Adrien explicitly approves it.</li>
         <li><strong>Do not merge into production casually.</strong> Changes enter <code>main</code> through a pull request, after review and after the relevant pipeline has run.</li>
         <li><strong>Always check the branch before editing.</strong> Folder names help, but <code>git status --short --branch</code> is the final check.</li>
+        <li><strong>Warn coauthors before touching a shared clone.</strong> Before you pull, commit, or push in <code>code_main</code> or <code>code_experimentation_main</code>, say so ("pushing to main now"). It is the one cheap habit that removes the only realistic way to corrupt a shared repository. Your own sandbox needs no warning, it is yours.</li>
       </ul>
 
       <nav class="page-nav">
