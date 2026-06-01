@@ -137,7 +137,9 @@
     # Repeat once per coauthor who needs a sandbox.</code></pre>
       </div>
 
-      <p>The folder name is not decoration. Git stores the current branch in the project's hidden <code>.git/</code> directory. That directory is inside Dropbox: it sits at the root of the project folder, not in your home directory like <code>~/.claude/</code>, so Dropbox syncs it along with the rest of the project. The branch state is there on disk, Dropbox simply does not surface it in its file browser UI. You therefore cannot tell from Dropbox alone what branch the folder is on, and the folder name is the workaround: it puts the intended branch in plain sight.</p>
+      <p>The folder name is not decoration. To see why, it helps to know what the hidden <code>.git/</code> directory actually contains. <code>.git/</code> holds the full local history of the project: every branch, every commit, every past version of every file, all on disk. It is not a tiny pointer file; it is the entire repository database. The files you see when you open the project folder are not "all branches at once". They are a snapshot of one branch, the one currently checked out. When you switch branches, Git rewrites those visible files from data already inside <code>.git/</code>, instantly and without needing internet, and updates a marker to remember the new active branch. GitHub is a separate copy of <code>.git/</code> used to sync that history with coauthors via push and pull, not the source of truth.</p>
+
+      <p>All of this happens inside Dropbox in our setup: <code>.git/</code> sits at the root of the project folder, not in your home directory like <code>~/.claude/</code>, so Dropbox syncs it along with the rest of the project. The active branch is recorded on disk, but Dropbox does not surface it in its file browser UI. You therefore cannot tell from Dropbox alone what branch the folder is on, and the folder name is the workaround: it puts the intended branch in plain sight.</p>
 
       <p>Still, the folder name is only a label. The actual branch is what <code>git status --short --branch</code> reports.</p>
 
