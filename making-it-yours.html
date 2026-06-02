@@ -288,6 +288,11 @@ After any regression, confirm the number of observations and FE used.</code></pr
         <p>Every time you create or update a project CLAUDE.md, open a fresh conversation and ask: <code>Read my global CLAUDE.md at ~/.claude/CLAUDE.md and compare it against this project's CLAUDE.md. Flag any rules that contradict or could override my global preferences.</code> This takes ten seconds and catches problems before they cause silent errors in your output.</p>
       </aside>
 
+      <aside class="callout callout-tip">
+        <span class="callout-label">Automate the check for new projects</span>
+        <p>You can stop relying on memory. Ask Claude Code once to set up an automatic guardrail: <code>Set up a hook that, whenever I create a new project CLAUDE.md, audits it against my global preferences and flags any rule that contradicts them.</code> From then on, every new project file is checked the moment it is created, and Claude tells you about conflicts before they reach your output. The manual habit above still covers later edits.</p>
+      </aside>
+
       <p>Projects can also have their own skills in <code>.claude/skills/</code> within the project folder. These only appear when you are working in that project.</p>
 
       <h2 id="team-skills">Team Skills</h2>
